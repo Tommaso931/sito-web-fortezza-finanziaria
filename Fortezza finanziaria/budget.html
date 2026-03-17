@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget 40-30-20-10 — Fortezza Finanziaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void:        #0a0b0e;
+      --bg-surface:     #10121a;
+      --bg-elevated:    #161923;
+      --gold-light:     #d4a843;
+      --gold:           #b8872e;
+      --gold-dim:       rgba(184,135,46,0.15);
+      --emerald:        #2ecc8b;
+      --emerald-dim:    rgba(46,204,139,0.12);
+      --text-primary:   #e8dfc8;
+      --text-secondary: #9a9080;
+      --text-muted:     #4a4640;
+      --border:         rgba(184,135,46,0.18);
+      --border-hover:   rgba(184,135,46,0.40);
+      --font-display:   'Cormorant Garamond', Georgia, serif;
+      --font-body:      'DM Sans', sans-serif;
+      --ease-out-expo:  cubic-bezier(0.16,1,0.3,1);
+      --duration-fast:  180ms;
+      --duration-base:  300ms;
+      --tools-nav-h:    64px;
+
+      /* Colori categorie budget */
+      --c-bisogni:    #b8872e;
+      --c-desideri:   #4a90d9;
+      --c-risparmio:  #2ecc8b;
+      --c-flessibile: #9b59b6;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body {
+      background: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-top: var(--tools-nav-h);
+    }
+
+    /* ════════════════════════════════════════
+       TOOLS NAVBAR
+    ════════════════════════════════════════ */
+    .tools-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      height: var(--tools-nav-h);
+      background: rgba(10,11,14,0.92);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+    }
+    .tools-nav__inner {
+      display: flex; align-items: center; gap: 1rem;
+      height: 100%; max-width: 1280px;
+      margin: 0 auto; padding: 0 clamp(1rem,3vw,2rem);
+    }
+    .tools-nav__logo {
+      display: flex; align-items: center; gap: 0.55rem;
+      flex-shrink: 0; color: var(--gold-light);
+      text-decoration: none;
+      transition: opacity var(--duration-fast) ease;
+    }
+    .tools-nav__logo:hover { opacity: 0.8; }
+    .tools-nav__logo svg { color: var(--gold); filter: drop-shadow(0 0 5px rgba(184,135,46,0.5)); }
+    .tools-nav__logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .tools-nav__logo-main { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em; color: var(--gold-light); }
+    .tools-nav__logo-sub  { font-size: 0.48rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-secondary); }
+    .tools-nav__inner::after { content: ''; display: block; width: 1px; height: 28px; background: var(--border); flex-shrink: 0; order: 1; }
+    .tools-nav__links { display: flex; align-items: center; gap: 0.15rem; flex: 1; overflow-x: auto; order: 2; scrollbar-width: none; }
+    .tools-nav__links::-webkit-scrollbar { display: none; }
+    .tools-nav__link { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 400; color: var(--text-secondary); text-decoration: none; white-space: nowrap; transition: background var(--duration-fast) ease, color var(--duration-fast) ease; flex-shrink: 0; }
+    .tools-nav__link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__link.is-active { background: var(--gold-dim); color: var(--gold-light); border: 1px solid var(--border); }
+    .tools-nav__home-btn { display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; order: 3; padding: 0.4rem 0.9rem; background: var(--gold-dim); border: 1px solid var(--border); border-radius: 6px; font-size: 0.75rem; font-weight: 500; color: var(--gold-light); text-decoration: none; transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease; }
+    .tools-nav__home-btn:hover { background: rgba(184,135,46,0.25); border-color: var(--border-hover); }
+    .tools-nav__hamburger { display: none; order: 4; flex-direction: column; justify-content: center; align-items: center; gap: 4px; width: 36px; height: 36px; border-radius: 6px; background: none; border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; transition: background var(--duration-fast) ease; }
+    .tools-nav__hamburger:hover { background: var(--gold-dim); }
+    .tools-nav__hamburger span { display: block; width: 18px; height: 1.5px; background: var(--text-secondary); border-radius: 2px; transition: transform var(--duration-base) var(--ease-out-expo), opacity var(--duration-fast) ease; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+    .tools-nav__mobile { position: absolute; top: var(--tools-nav-h); left: 0; right: 0; background: rgba(10,11,14,0.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; animation: mobileDropIn 0.25s var(--ease-out-expo) both; }
+    .tools-nav__mobile[hidden] { display: none; }
+    @keyframes mobileDropIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .tools-nav__mobile-link { display: block; padding: 0.75rem 0.85rem; border-radius: 8px; font-size: 0.88rem; color: var(--text-secondary); text-decoration: none; transition: background var(--duration-fast) ease, color var(--duration-fast) ease; }
+    .tools-nav__mobile-link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__mobile-link--home { margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 1rem; color: var(--gold-light); }
+    @media (max-width: 860px) { .tools-nav__links { display: none; } .tools-nav__home-btn { display: none; } .tools-nav__hamburger { display: flex; } .tools-nav__inner::after { display: none; } }
+
+    /* ════════════════════════════════════════
+       LAYOUT PAGINA
+    ════════════════════════════════════════ */
+    .budget {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem clamp(1rem,3vw,2rem) 5rem;
+      display: flex; flex-direction: column; gap: 2rem;
+    }
+
+    /* ── HEADER ── */
+    .budget__header {
+      display: flex; align-items: center; gap: 1rem;
+      padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .budget__header-icon {
+      width: 48px; height: 48px;
+      background: var(--gold-dim); border: 1px solid var(--border);
+      border-radius: 12px; display: flex; align-items: center;
+      justify-content: center; color: var(--gold-light); flex-shrink: 0;
+    }
+    .budget__eyebrow { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+    .budget__title { font-family: var(--font-display); font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 700; line-height: 1.1; }
+    .budget__title em { font-style: italic; background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── INPUT STIPENDIO ── */
+    .salary-input-wrap {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 2rem; position: relative;
+      backdrop-filter: blur(20px);
+    }
+    .salary-input-wrap::before {
+      content: ''; position: absolute;
+      top: -1px; left: 15%; right: 15%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
+      border-radius: 2px;
+    }
+    .salary-label {
+      display: block; font-size: 0.82rem; font-weight: 500;
+      color: var(--text-secondary); margin-bottom: 0.75rem;
+    }
+    .salary-field {
+      display: flex; align-items: center; gap: 0;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; max-width: 360px;
+      transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+    }
+    .salary-field:focus-within {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184,135,46,0.12);
+    }
+    .salary-prefix {
+      padding: 0.85rem 1rem; font-family: var(--font-display);
+      font-size: 1.2rem; color: var(--gold); background: rgba(184,135,46,0.08);
+      border-right: 1px solid var(--border); flex-shrink: 0;
+    }
+    .salary-input {
+      flex: 1; padding: 0.85rem 1rem;
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+      color: var(--gold-light); background: transparent;
+      border: none; outline: none;
+      -webkit-appearance: none; appearance: none;
+    }
+    .salary-input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 1.2rem; }
+
+    .salary-hint {
+      margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    /* ── BARRA VISIVA PROPORZIONALE ── */
+    .budget-bar-wrap {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.75rem;
+    }
+    .budget-bar-wrap__title {
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem;
+    }
+    .budget-bar {
+      display: flex; height: 52px; border-radius: 10px; overflow: hidden;
+      gap: 3px;
+    }
+    .budget-bar__segment {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
+      color: var(--bg-void); transition: flex var(--duration-slow) var(--ease-out-expo);
+      white-space: nowrap; overflow: hidden; cursor: default;
+      border-radius: 4px;
+    }
+    .budget-bar__segment--bisogni   { background: var(--c-bisogni);   flex: 40; }
+    .budget-bar__segment--desideri  { background: var(--c-desideri);  flex: 30; }
+    .budget-bar__segment--risparmio { background: var(--c-risparmio); flex: 20; }
+    .budget-bar__segment--flessibile{ background: var(--c-flessibile);flex: 10; }
+
+    /* ── GRIGLIA CATEGORIE ── */
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .category-card {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; position: relative; overflow: hidden;
+      transition: border-color var(--duration-base) ease;
+    }
+    .category-card:hover { border-color: var(--border-hover); }
+
+    /* Barra colorata in cima */
+    .category-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+    }
+    .category-card--bisogni::before    { background: var(--c-bisogni); }
+    .category-card--desideri::before   { background: var(--c-desideri); }
+    .category-card--risparmio::before  { background: var(--c-risparmio); }
+    .category-card--flessibile::before { background: var(--c-flessibile); }
+
+    .category-card__header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 1rem;
+    }
+    .category-card__meta { display: flex; flex-direction: column; gap: 0.25rem; }
+    .category-card__pct {
+      font-family: var(--font-display); font-size: 2.5rem;
+      font-weight: 700; line-height: 1;
+    }
+    .category-card--bisogni    .category-card__pct { color: var(--c-bisogni); }
+    .category-card--desideri   .category-card__pct { color: var(--c-desideri); }
+    .category-card--risparmio  .category-card__pct { color: var(--c-risparmio); }
+    .category-card--flessibile .category-card__pct { color: var(--c-flessibile); }
+
+    .category-card__name {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
+    }
+    .category-card__icon { font-size: 1.8rem; }
+
+    .category-card__amount {
+      font-family: var(--font-display); font-size: 1.9rem;
+      font-weight: 700; color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      transition: all 0.4s var(--ease-out-expo);
+    }
+    .category-card__monthly {
+      font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;
+    }
+
+    /* Progress bar interna */
+    .category-card__bar {
+      height: 4px; background: var(--bg-elevated); border-radius: 2px; overflow: hidden;
+    }
+    .category-card__bar-fill {
+      height: 100%; border-radius: 2px; width: 0%;
+      transition: width 0.9s var(--ease-out-expo);
+    }
+    .category-card--bisogni    .category-card__bar-fill { background: var(--c-bisogni); }
+    .category-card--desideri   .category-card__bar-fill { background: var(--c-desideri); }
+    .category-card--risparmio  .category-card__bar-fill { background: var(--c-risparmio); }
+    .category-card--flessibile .category-card__bar-fill { background: var(--c-flessibile); }
+
+    /* Esempi di voci */
+    .category-card__examples {
+      margin-top: 1rem; padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+    }
+    .category-card__tag {
+      padding: 0.2rem 0.55rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px; font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    /* ── STATO VUOTO ── */
+    .budget-empty {
+      text-align: center; padding: 3rem 1rem;
+      color: var(--text-muted); font-size: 0.9rem;
+    }
+    .budget-empty span { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; opacity: 0.4; }
+
+    /* ── RIEPILOGO ANNUALE ── */
+    .annual-summary {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; overflow: hidden;
+    }
+    .annual-summary__item {
+      padding: 1.25rem; text-align: center;
+      background: rgba(16,18,26,0.85);
+    }
+    .annual-summary__label { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem; }
+    .annual-summary__value { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; }
+    .annual-summary__item:nth-child(1) .annual-summary__value { color: var(--text-primary); }
+    .annual-summary__item:nth-child(2) .annual-summary__value { color: var(--c-risparmio); }
+    .annual-summary__item:nth-child(3) .annual-summary__value { color: var(--gold-light); }
+
+    /* ── COACH BOX ── */
+    .coach-box {
+      background: rgba(184,135,46,0.06); border: 1px solid rgba(184,135,46,0.2);
+      border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0;
+      padding: 1.1rem 1.35rem; display: flex; gap: 0.85rem; align-items: flex-start;
+    }
+    .coach-box__icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .coach-box__text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.75; }
+    .coach-box__text strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .categories { grid-template-columns: 1fr; }
+      .annual-summary { grid-template-columns: 1fr; }
+      .annual-summary__item { padding: 1rem; }
+      .budget-bar { height: 40px; }
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-void); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOOLS NAVBAR ══ -->
+  <header class="tools-nav" id="toolsNav">
+    <div class="tools-nav__inner">
+      <a href="index.html" class="tools-nav__logo" aria-label="Torna alla homepage">
+        <svg width="24" height="28" viewBox="0 0 32 36" fill="none">
+          <path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="tools-nav__logo-text">
+          <span class="tools-nav__logo-main">Fortezza</span>
+          <span class="tools-nav__logo-sub">Finanziaria</span>
+        </span>
+      </a>
+      <nav class="tools-nav__links" aria-label="Strumenti">
+        <a href="simulatore-int-comp.html" class="tools-nav__link"><span>📈</span><span>Interesse Composto</span></a>
+        <a href="budget.html"             class="tools-nav__link is-active"><span>📊</span><span>Budget</span></a>
+        <a href="fondo-emergenza.html"    class="tools-nav__link"><span>🛡</span><span>Fondo Emergenza</span></a>
+        <a href="debiti.html"             class="tools-nav__link"><span>❄️</span><span>Debiti</span></a>
+        <a href="costo-opportunita.html"  class="tools-nav__link"><span>⏳</span><span>Costo Opportunità</span></a>
+        <a href="costo-utilizzo.html"     class="tools-nav__link"><span>🧮</span><span>Costo Utilizzo</span></a>
+      </nav>
+      <a href="index.html" class="tools-nav__home-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Homepage
+      </a>
+      <button class="tools-nav__hamburger" id="toolsHamburger" aria-label="Menu strumenti" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="tools-nav__mobile" id="toolsMobile" hidden>
+      <a href="simulatore-int-comp.html" class="tools-nav__mobile-link">📈 Interesse Composto</a>
+      <a href="budget.html"             class="tools-nav__mobile-link">📊 Budget 40-30-20-10</a>
+      <a href="fondo-emergenza.html"    class="tools-nav__mobile-link">🛡 Fondo di Emergenza</a>
+      <a href="debiti.html"             class="tools-nav__mobile-link">❄️ Palla di Neve vs Valanga</a>
+      <a href="costo-opportunita.html"  class="tools-nav__mobile-link">⏳ Costo Opportunità</a>
+      <a href="costo-utilizzo.html"     class="tools-nav__mobile-link">🧮 Costo per Utilizzo</a>
+      <a href="index.html"                   class="tools-nav__mobile-link tools-nav__mobile-link--home">🏠 Torna alla Homepage</a>
+    </div>
+  </header>
+
+  <!-- ══ BUDGET ══ -->
+  <div class="budget">
+
+    <!-- HEADER -->
+    <div class="budget__header">
+      <div class="budget__header-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="2" y="3" width="20" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M2 7h20" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div>
+        <p class="budget__eyebrow">Strumento 02 · Fortezza Finanziaria</p>
+        <h1 class="budget__title">Budget <em>40-30-20-10</em></h1>
+      </div>
+    </div>
+
+    <!-- INPUT STIPENDIO -->
+    <div class="salary-input-wrap">
+      <label class="salary-label" for="salaryInput">Inserisci il tuo stipendio netto mensile</label>
+      <div class="salary-field">
+        <span class="salary-prefix">€</span>
+        <input
+          type="number"
+          id="salaryInput"
+          class="salary-input"
+          placeholder="1.800"
+          min="0"
+          max="999999"
+          step="50"
+          inputmode="numeric"
+          aria-label="Stipendio netto mensile in euro"
+        />
+      </div>
+      <p class="salary-hint">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Usa lo stipendio netto — quello che ricevi effettivamente sul conto corrente.
+      </p>
+    </div>
+
+    <!-- STATO VUOTO -->
+    <div class="budget-empty" id="budgetEmpty">
+      <span>📊</span>
+      Inserisci il tuo stipendio netto per vedere la divisione del budget.
+    </div>
+
+    <!-- RISULTATI (nascosti finché non c'è input) -->
+    <div id="budgetResults" hidden>
+
+      <!-- BARRA PROPORZIONALE -->
+      <div class="budget-bar-wrap">
+        <p class="budget-bar-wrap__title">Distribuzione visiva del budget</p>
+        <div class="budget-bar" role="img" aria-label="Grafico distribuzione budget">
+          <div class="budget-bar__segment budget-bar__segment--bisogni"   id="barBisogni">40%</div>
+          <div class="budget-bar__segment budget-bar__segment--desideri"  id="barDesideri">30%</div>
+          <div class="budget-bar__segment budget-bar__segment--risparmio" id="barRisparmio">20%</div>
+          <div class="budget-bar__segment budget-bar__segment--flessibile"id="barFlessibile">10%</div>
+        </div>
+        <!-- Legenda -->
+        <div style="display:flex;gap:1.25rem;flex-wrap:wrap;margin-top:0.85rem;">
+          <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-bisogni);display:inline-block;flex-shrink:0"></span>Bisogni</div>
+          <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-desideri);display:inline-block;flex-shrink:0"></span>Desideri</div>
+          <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-risparmio);display:inline-block;flex-shrink:0"></span>Risparmio</div>
+          <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:var(--c-flessibile);display:inline-block;flex-shrink:0"></span>Fondo Flessibile</div>
+        </div>
+      </div>
+
+      <!-- CATEGORIE -->
+      <div class="categories">
+
+        <!-- BISOGNI 40% -->
+        <div class="category-card category-card--bisogni">
+          <div class="category-card__header">
+            <div class="category-card__meta">
+              <div class="category-card__pct">40%</div>
+              <div class="category-card__name">Bisogni</div>
+            </div>
+            <div class="category-card__icon">🏠</div>
+          </div>
+          <div class="category-card__amount" id="amtBisogni">—</div>
+          <div class="category-card__monthly">al mese per le necessità</div>
+          <div class="category-card__bar"><div class="category-card__bar-fill" id="fillBisogni"></div></div>
+          <div class="category-card__examples">
+            <span class="category-card__tag">Affitto / Mutuo</span>
+            <span class="category-card__tag">Bollette</span>
+            <span class="category-card__tag">Spesa alimentare</span>
+            <span class="category-card__tag">Trasporti</span>
+            <span class="category-card__tag">Assicurazioni</span>
+            <span class="category-card__tag">Medicine</span>
+          </div>
+        </div>
+
+        <!-- DESIDERI 30% -->
+        <div class="category-card category-card--desideri">
+          <div class="category-card__header">
+            <div class="category-card__meta">
+              <div class="category-card__pct">30%</div>
+              <div class="category-card__name">Desideri</div>
+            </div>
+            <div class="category-card__icon">🎬</div>
+          </div>
+          <div class="category-card__amount" id="amtDesideri">—</div>
+          <div class="category-card__monthly">al mese per vivere bene</div>
+          <div class="category-card__bar"><div class="category-card__bar-fill" id="fillDesideri"></div></div>
+          <div class="category-card__examples">
+            <span class="category-card__tag">Ristoranti</span>
+            <span class="category-card__tag">Abbigliamento</span>
+            <span class="category-card__tag">Streaming</span>
+            <span class="category-card__tag">Hobby</span>
+            <span class="category-card__tag">Viaggi</span>
+            <span class="category-card__tag">Palestra</span>
+          </div>
+        </div>
+
+        <!-- RISPARMIO 20% -->
+        <div class="category-card category-card--risparmio">
+          <div class="category-card__header">
+            <div class="category-card__meta">
+              <div class="category-card__pct">20%</div>
+              <div class="category-card__name">Risparmio &amp; Investimento</div>
+            </div>
+            <div class="category-card__icon">📈</div>
+          </div>
+          <div class="category-card__amount" id="amtRisparmio">—</div>
+          <div class="category-card__monthly">al mese per il futuro</div>
+          <div class="category-card__bar"><div class="category-card__bar-fill" id="fillRisparmio"></div></div>
+          <div class="category-card__examples">
+            <span class="category-card__tag">ETF / Azioni</span>
+            <span class="category-card__tag">Pensione integrativa</span>
+            <span class="category-card__tag">Conto deposito</span>
+            <span class="category-card__tag">Obiettivi a lungo termine</span>
+          </div>
+        </div>
+
+        <!-- FONDO FLESSIBILE 10% -->
+        <div class="category-card category-card--flessibile">
+          <div class="category-card__header">
+            <div class="category-card__meta">
+              <div class="category-card__pct">10%</div>
+              <div class="category-card__name">Fondo Flessibile</div>
+            </div>
+            <div class="category-card__icon">🛡</div>
+          </div>
+          <div class="category-card__amount" id="amtFlessibile">—</div>
+          <div class="category-card__monthly">al mese per gli imprevisti</div>
+          <div class="category-card__bar"><div class="category-card__bar-fill" id="fillFlessibile"></div></div>
+          <div class="category-card__examples">
+            <span class="category-card__tag">Fondo di emergenza</span>
+            <span class="category-card__tag">Spese inattese</span>
+            <span class="category-card__tag">Riparazioni</span>
+            <span class="category-card__tag">Regali</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIEPILOGO ANNUALE -->
+      <div class="annual-summary">
+        <div class="annual-summary__item">
+          <div class="annual-summary__label">Stipendio annuo netto</div>
+          <div class="annual-summary__value" id="annualGross">—</div>
+        </div>
+        <div class="annual-summary__item">
+          <div class="annual-summary__label">Risparmio annuo</div>
+          <div class="annual-summary__value" id="annualSaving">—</div>
+        </div>
+        <div class="annual-summary__item">
+          <div class="annual-summary__label">Risparmio in 10 anni</div>
+          <div class="annual-summary__value" id="annualTen">—</div>
+        </div>
+      </div>
+
+      <!-- COACH BOX -->
+      <div class="coach-box">
+        <div class="coach-box__icon">🛡</div>
+        <div class="coach-box__text" id="coachText">—</div>
+      </div>
+
+    </div><!-- /#budgetResults -->
+
+  </div><!-- /.budget -->
+
+  <script>
+  'use strict';
+
+  /* ── NAVBAR MOBILE ── */
+  (function() {
+    const btn  = document.getElementById('toolsHamburger');
+    const menu = document.getElementById('toolsMobile');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      open ? menu.setAttribute('hidden','') : menu.removeAttribute('hidden');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { btn.setAttribute('aria-expanded','false'); menu.setAttribute('hidden',''); }
+    });
+  })();
+
+  /* ── FORMATTATORI ── */
+  const fmt = n => n.toLocaleString('it-IT', { style:'currency', currency:'EUR', maximumFractionDigits:0 });
+
+  /* ── DOM ── */
+  const salaryInput   = document.getElementById('salaryInput');
+  const budgetEmpty   = document.getElementById('budgetEmpty');
+  const budgetResults = document.getElementById('budgetResults');
+
+  const amtBisogni    = document.getElementById('amtBisogni');
+  const amtDesideri   = document.getElementById('amtDesideri');
+  const amtRisparmio  = document.getElementById('amtRisparmio');
+  const amtFlessibile = document.getElementById('amtFlessibile');
+
+  const fillBisogni    = document.getElementById('fillBisogni');
+  const fillDesideri   = document.getElementById('fillDesideri');
+  const fillRisparmio  = document.getElementById('fillRisparmio');
+  const fillFlessibile = document.getElementById('fillFlessibile');
+
+  const annualGross  = document.getElementById('annualGross');
+  const annualSaving = document.getElementById('annualSaving');
+  const annualTen    = document.getElementById('annualTen');
+  const coachText    = document.getElementById('coachText');
+
+  /* ── ANIMAZIONE NUMERO ── */
+  function animateValue(el, target, formatter) {
+    const dur = 500, start = performance.now();
+    function step(ts) {
+      const p = Math.min((ts - start) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = formatter(Math.round(e * target));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = formatter(target);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ── CALCOLO ── */
+  function compute() {
+    const salary = parseFloat(salaryInput.value);
+
+    if (!salary || salary <= 0) {
+      budgetEmpty.removeAttribute('hidden');
+      budgetResults.setAttribute('hidden', '');
+      return;
+    }
+
+    budgetEmpty.setAttribute('hidden', '');
+    budgetResults.removeAttribute('hidden');
+
+    const bisogni    = salary * 0.40;
+    const desideri   = salary * 0.30;
+    const risparmio  = salary * 0.20;
+    const flessibile = salary * 0.10;
+
+    /* Importi mensili */
+    animateValue(amtBisogni,    bisogni,    fmt);
+    animateValue(amtDesideri,   desideri,   fmt);
+    animateValue(amtRisparmio,  risparmio,  fmt);
+    animateValue(amtFlessibile, flessibile, fmt);
+
+    /* Barre interne (percentuale rispetto al totale = 100%) */
+    setTimeout(() => {
+      fillBisogni.style.width    = '100%'; /* già al 40% della card */
+      fillDesideri.style.width   = '100%';
+      fillRisparmio.style.width  = '100%';
+      fillFlessibile.style.width = '100%';
+    }, 50);
+
+    /* Riepilogo annuale */
+    animateValue(annualGross,  salary * 12,       fmt);
+    animateValue(annualSaving, risparmio * 12,     fmt);
+    animateValue(annualTen,    risparmio * 12 * 10, fmt);
+
+    /* Coach message */
+    updateCoach(salary, risparmio, flessibile);
+  }
+
+  /* ── COACH ── */
+  function updateCoach(salary, risparmio, flessibile) {
+    let msg = '';
+    const rispAnnuo = risparmio * 12;
+
+    if (salary < 800) {
+      msg = `Con uno stipendio di <strong>${fmt(salary)}</strong> il margine è stretto, ma anche <strong>${fmt(risparmio)}/mese</strong> messi da parte con costanza costruiscono nel tempo. Priorità assoluta: prima il Fondo Flessibile (${fmt(flessibile)}/mese) fino a raggiungere 3 mesi di spese coperte.`;
+    } else if (salary < 1500) {
+      msg = `<strong>${fmt(risparmio)}/mese</strong> destinati al risparmio significano <strong>${fmt(rispAnnuo)}/anno</strong>. Un buon punto di partenza. Automatizza il bonifico verso il conto risparmio il giorno stesso dello stipendio — prima che tu possa spenderli.`;
+    } else if (salary < 3000) {
+      msg = `Con <strong>${fmt(risparmio)}/mese</strong> investiti in ETF al 7% annuo, in 20 anni potresti accumulare circa <strong>${fmt(risparmio * 12 * 20 * 1.9)}</strong> (stima con interesse composto). Il fondo flessibile da <strong>${fmt(flessibile)}/mese</strong> copre le sorprese senza intaccare gli investimenti.`;
+    } else {
+      msg = `Ottima base di partenza. Con <strong>${fmt(risparmio)}/mese</strong> hai la flessibilità di diversificare: ETF azionari per il lungo termine, pensione integrativa per ottimizzare la fiscalità, e liquidità nel fondo flessibile (<strong>${fmt(flessibile)}/mese</strong>) per cogliere opportunità.`;
+    }
+
+    coachText.innerHTML = msg;
+  }
+
+  /* ── EVENT LISTENERS ── */
+  salaryInput.addEventListener('input', compute);
+
+  /* ── INIT ── */
+  compute();
+  </script>
+
+</body>
+</html>

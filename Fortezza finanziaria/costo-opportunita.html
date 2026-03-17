@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Costo Opportunità — Fortezza Finanziaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-void:        #0a0b0e;
+      --bg-surface:     #10121a;
+      --bg-elevated:    #161923;
+      --gold-light:     #d4a843;
+      --gold:           #b8872e;
+      --gold-dim:       rgba(184,135,46,0.15);
+      --emerald:        #2ecc8b;
+      --emerald-dim:    rgba(46,204,139,0.12);
+      --text-primary:   #e8dfc8;
+      --text-secondary: #9a9080;
+      --text-muted:     #4a4640;
+      --border:         rgba(184,135,46,0.18);
+      --border-hover:   rgba(184,135,46,0.40);
+      --font-display:   'Cormorant Garamond', Georgia, serif;
+      --font-body:      'DM Sans', sans-serif;
+      --ease-out-expo:  cubic-bezier(0.16,1,0.3,1);
+      --duration-fast:  180ms;
+      --duration-base:  300ms;
+      --tools-nav-h:    64px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body { background: var(--bg-void); color: var(--text-primary); font-family: var(--font-body); font-size: 1rem; line-height: 1.6; min-height: 100vh; padding-top: var(--tools-nav-h); }
+
+    /* ════ TOOLS NAVBAR ════ */
+    .tools-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 900; height: var(--tools-nav-h); background: rgba(10,11,14,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); }
+    .tools-nav__inner { display: flex; align-items: center; gap: 1rem; height: 100%; max-width: 1280px; margin: 0 auto; padding: 0 clamp(1rem,3vw,2rem); }
+    .tools-nav__logo { display: flex; align-items: center; gap: 0.55rem; flex-shrink: 0; color: var(--gold-light); text-decoration: none; transition: opacity var(--duration-fast) ease; }
+    .tools-nav__logo:hover { opacity: 0.8; }
+    .tools-nav__logo svg { color: var(--gold); filter: drop-shadow(0 0 5px rgba(184,135,46,0.5)); }
+    .tools-nav__logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .tools-nav__logo-main { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em; color: var(--gold-light); }
+    .tools-nav__logo-sub  { font-size: 0.48rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-secondary); }
+    .tools-nav__inner::after { content: ''; display: block; width: 1px; height: 28px; background: var(--border); flex-shrink: 0; order: 1; }
+    .tools-nav__links { display: flex; align-items: center; gap: 0.15rem; flex: 1; overflow-x: auto; order: 2; scrollbar-width: none; }
+    .tools-nav__links::-webkit-scrollbar { display: none; }
+    .tools-nav__link { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 400; color: var(--text-secondary); text-decoration: none; white-space: nowrap; transition: background var(--duration-fast) ease, color var(--duration-fast) ease; flex-shrink: 0; }
+    .tools-nav__link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__link.is-active { background: var(--gold-dim); color: var(--gold-light); border: 1px solid var(--border); }
+    .tools-nav__home-btn { display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; order: 3; padding: 0.4rem 0.9rem; background: var(--gold-dim); border: 1px solid var(--border); border-radius: 6px; font-size: 0.75rem; font-weight: 500; color: var(--gold-light); text-decoration: none; transition: background var(--duration-fast) ease; }
+    .tools-nav__home-btn:hover { background: rgba(184,135,46,0.25); border-color: var(--border-hover); }
+    .tools-nav__hamburger { display: none; order: 4; flex-direction: column; justify-content: center; align-items: center; gap: 4px; width: 36px; height: 36px; border-radius: 6px; background: none; border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
+    .tools-nav__hamburger:hover { background: var(--gold-dim); }
+    .tools-nav__hamburger span { display: block; width: 18px; height: 1.5px; background: var(--text-secondary); border-radius: 2px; transition: transform var(--duration-base) var(--ease-out-expo), opacity var(--duration-fast) ease; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+    .tools-nav__mobile { position: absolute; top: var(--tools-nav-h); left: 0; right: 0; background: rgba(10,11,14,0.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; animation: mobileDropIn 0.25s var(--ease-out-expo) both; }
+    .tools-nav__mobile[hidden] { display: none; }
+    @keyframes mobileDropIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .tools-nav__mobile-link { display: block; padding: 0.75rem 0.85rem; border-radius: 8px; font-size: 0.88rem; color: var(--text-secondary); text-decoration: none; transition: background var(--duration-fast) ease, color var(--duration-fast) ease; }
+    .tools-nav__mobile-link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__mobile-link--home { margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 1rem; color: var(--gold-light); }
+    @media (max-width: 860px) { .tools-nav__links { display: none; } .tools-nav__home-btn { display: none; } .tools-nav__hamburger { display: flex; } .tools-nav__inner::after { display: none; } }
+
+    /* ════ LAYOUT ════ */
+    .page { max-width: 860px; margin: 0 auto; padding: 2.5rem clamp(1rem,3vw,2rem) 5rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    /* ── HEADER ── */
+    .page__header { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .page__header-icon { width: 48px; height: 48px; background: var(--emerald-dim); border: 1px solid rgba(46,204,139,0.25); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .page__eyebrow { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+    .page__title { font-family: var(--font-display); font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 700; line-height: 1.1; }
+    .page__title em { font-style: italic; background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── SPIEGAZIONE ── */
+    .explainer { padding: 1.25rem 1.5rem; background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 14px; }
+    .explainer p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8; }
+    .explainer p + p { margin-top: 0.75rem; }
+    .explainer strong { color: var(--text-primary); }
+    .explainer em { color: var(--gold-light); font-style: italic; }
+
+    /* ── INPUT CARD ── */
+    .input-card { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
+    .input-card::before { content: ''; position: absolute; top: -1px; left: 15%; right: 15%; height: 2px; background: linear-gradient(90deg, transparent, var(--emerald), var(--gold), transparent); border-radius: 2px; }
+    .input-card__title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+
+    /* ── FIELD ── */
+    .field { display: flex; flex-direction: column; gap: 0.5rem; }
+    .field__label { font-size: 0.82rem; font-weight: 500; color: var(--text-secondary); }
+    .field__hint  { font-size: 0.72rem; color: var(--text-muted); }
+    .field__money { display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; max-width: 320px; transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease; }
+    .field__money:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,135,46,0.12); }
+    .field__money-prefix { padding: 0.8rem 1rem; font-family: var(--font-display); font-size: 1.1rem; color: var(--gold); background: rgba(184,135,46,0.08); border-right: 1px solid var(--border); flex-shrink: 0; }
+    .field__money-input { flex: 1; padding: 0.8rem 1rem; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--gold-light); background: transparent; border: none; outline: none; -webkit-appearance: none; }
+    .field__money-input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 1.1rem; }
+
+    /* ── NOME ACQUISTO ── */
+    .field__text-input { padding: 0.7rem 1rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-primary); outline: none; max-width: 400px; transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease; }
+    .field__text-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,135,46,0.12); }
+    .field__text-input::placeholder { color: var(--text-muted); }
+
+    /* ── SLIDER TASSO ── */
+    .field__slider-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .field__slider { -webkit-appearance: none; appearance: none; flex: 1; min-width: 160px; height: 4px; border-radius: 2px; background: var(--bg-elevated); outline: none; cursor: pointer; }
+    .field__slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-light), var(--gold)); cursor: pointer; box-shadow: 0 2px 8px rgba(184,135,46,0.5); transition: transform var(--duration-fast) ease; }
+    .field__slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    .field__slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; border: none; background: linear-gradient(135deg, var(--gold-light), var(--gold)); }
+    .field__slider-value { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--gold-light); min-width: 45px; text-align: right; flex-shrink: 0; }
+    .field__presets { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; }
+    .field__preset { padding: 0.25rem 0.65rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 5px; font-size: 0.68rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all var(--duration-fast) ease; }
+    .field__preset:hover, .field__preset.is-active { background: var(--gold-dim); border-color: var(--border-hover); color: var(--gold-light); }
+
+    /* ── VUOTO ── */
+    .page-empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9rem; }
+    .page-empty span { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; opacity: 0.4; }
+
+    /* ── RISULTATI ── */
+
+    /* Hero — valore futuro principale */
+    .result-hero { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: center; position: relative; overflow: hidden; }
+    .result-hero::before { content: ''; position: absolute; top: -1px; left: 10%; right: 10%; height: 2px; background: linear-gradient(90deg, transparent, var(--emerald), transparent); }
+    .result-hero__question { font-family: var(--font-display); font-size: clamp(1.1rem,2.5vw,1.5rem); font-style: italic; color: var(--text-secondary); margin-bottom: 1.25rem; line-height: 1.3; }
+    .result-hero__question strong { color: var(--gold-light); font-style: normal; }
+    .result-hero__vs { display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+    .result-hero__side { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .result-hero__side-label { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .result-hero__side-amount { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; line-height: 1; }
+    .result-hero__side--spend .result-hero__side-amount { color: #e07070; }
+    .result-hero__side--invest .result-hero__side-amount { color: var(--emerald); }
+    .result-hero__arrow { font-size: 1.5rem; color: var(--text-muted); flex-shrink: 0; }
+    .result-hero__multiplier { margin-top: 1.25rem; font-size: 0.82rem; color: var(--text-muted); }
+    .result-hero__multiplier strong { color: var(--emerald); font-size: 1rem; }
+
+    /* Timeline a orizzonti temporali */
+    .horizons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .horizon-card { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; position: relative; overflow: hidden; transition: border-color var(--duration-base) ease; }
+    .horizon-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--emerald); opacity: 0; transition: opacity var(--duration-base) ease; }
+    .horizon-card.is-highlighted { border-color: rgba(46,204,139,0.4); }
+    .horizon-card.is-highlighted::after { opacity: 0.8; }
+    .horizon-card__years { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .horizon-card__value { font-family: var(--font-display); font-size: clamp(1.1rem,2vw,1.5rem); font-weight: 700; color: var(--emerald); }
+    .horizon-card__gain { font-size: 0.72rem; color: var(--text-muted); }
+    .horizon-card__gain strong { color: var(--gold-light); }
+
+    /* Grafico */
+    .chart-wrap { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+    .chart-wrap__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
+    .chart-wrap__title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
+    .chart-legend { display: flex; gap: 1.25rem; }
+    .chart-legend__item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--text-secondary); }
+    .chart-legend__dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .chart-canvas-wrap { position: relative; height: 260px; }
+
+    /* Equivalenze creative */
+    .equivalences { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+    .equivalences__title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.1rem; }
+    .equiv-list { display: flex; flex-direction: column; gap: 0.6rem; list-style: none; }
+    .equiv-item { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem 1rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 10px; }
+    .equiv-item__icon { font-size: 1.2rem; flex-shrink: 0; }
+    .equiv-item__text { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; flex: 1; }
+    .equiv-item__text strong { color: var(--emerald); font-weight: 600; }
+
+    /* Coach */
+    .coach-box { background: rgba(184,135,46,0.06); border: 1px solid rgba(184,135,46,0.2); border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0; padding: 1.1rem 1.35rem; display: flex; gap: 0.85rem; align-items: flex-start; }
+    .coach-box__icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .coach-box__text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.75; }
+    .coach-box__text strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .horizons { grid-template-columns: repeat(2,1fr); }
+      .chart-canvas-wrap { height: 210px; }
+    }
+    @media (max-width: 400px) {
+      .horizons { grid-template-columns: 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-void); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOOLS NAVBAR ══ -->
+  <header class="tools-nav" id="toolsNav">
+    <div class="tools-nav__inner">
+      <a href="index.html" class="tools-nav__logo" aria-label="Torna alla homepage">
+        <svg width="24" height="28" viewBox="0 0 32 36" fill="none">
+          <path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="tools-nav__logo-text">
+          <span class="tools-nav__logo-main">Fortezza</span>
+          <span class="tools-nav__logo-sub">Finanziaria</span>
+        </span>
+      </a>
+      <nav class="tools-nav__links" aria-label="Strumenti">
+        <a href="simulatore-int-comp.html" class="tools-nav__link"><span>📈</span><span>Interesse Composto</span></a>
+        <a href="budget.html"             class="tools-nav__link"><span>📊</span><span>Budget</span></a>
+        <a href="fondo-emergenza.html"    class="tools-nav__link"><span>🛡</span><span>Fondo Emergenza</span></a>
+        <a href="debiti.html"             class="tools-nav__link"><span>❄️</span><span>Debiti</span></a>
+        <a href="costo-opportunita.html"  class="tools-nav__link is-active"><span>⏳</span><span>Costo Opportunità</span></a>
+        <a href="costo-utilizzo.html"     class="tools-nav__link"><span>🧮</span><span>Costo Utilizzo</span></a>
+      </nav>
+      <a href="index.html" class="tools-nav__home-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Homepage
+      </a>
+      <button class="tools-nav__hamburger" id="toolsHamburger" aria-label="Menu strumenti" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="tools-nav__mobile" id="toolsMobile" hidden>
+      <a href="simulatore-int-comp.html" class="tools-nav__mobile-link">📈 Interesse Composto</a>
+      <a href="budget.html"             class="tools-nav__mobile-link">📊 Budget 40-30-20-10</a>
+      <a href="fondo-emergenza.html"    class="tools-nav__mobile-link">🛡 Fondo di Emergenza</a>
+      <a href="debiti.html"             class="tools-nav__mobile-link">❄️ Palla di Neve vs Valanga</a>
+      <a href="costo-opportunita.html"  class="tools-nav__mobile-link">⏳ Costo Opportunità</a>
+      <a href="costo-utilizzo.html"     class="tools-nav__mobile-link">🧮 Costo per Utilizzo</a>
+      <a href="index.html"                   class="tools-nav__mobile-link tools-nav__mobile-link--home">🏠 Torna alla Homepage</a>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <div class="page__header">
+      <div class="page__header-icon">⏳</div>
+      <div>
+        <p class="page__eyebrow">Strumento 05 · Fortezza Finanziaria</p>
+        <h1 class="page__title">Costo <em>Opportunità</em></h1>
+      </div>
+    </div>
+
+    <div class="explainer">
+      <p>Ogni volta che spendi dei soldi, non stai solo perdendo quella cifra — stai perdendo anche tutto quello che quella cifra avrebbe potuto <em>diventare</em> nel tempo.</p>
+      <p>Il <strong>costo opportunità</strong> è il valore di ciò a cui rinunci scegliendo una cosa invece di un'altra. Questo tool non ti dice di non comprare — ti dice <strong>quanto costa davvero</strong> quella scelta, in termini di futuro a cui rinunci. Così puoi decidere consapevolmente.</p>
+    </div>
+
+    <div class="input-card">
+      <p class="input-card__title">Descrivi l'acquisto</p>
+
+      <div class="field">
+        <label class="field__label" for="purchaseName">Cosa vorresti comprare?</label>
+        <input type="text" id="purchaseName" class="field__text-input"
+          placeholder="Es. Smartphone nuovo, vacanza, orologio…"
+          maxlength="60" aria-label="Nome dell'acquisto" />
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="purchaseAmount">Quanto costa?</label>
+        <div class="field__money">
+          <span class="field__money-prefix">€</span>
+          <input type="number" id="purchaseAmount" class="field__money-input"
+            placeholder="800" min="1" max="9999999" step="50" inputmode="numeric"
+            aria-label="Costo dell'acquisto in euro" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label">Tasso di rendimento annuo atteso</label>
+        <p class="field__hint">Il rendimento che otterresti investendo questa cifra invece di spenderla.</p>
+        <div class="field__slider-row">
+          <input type="range" id="rateSlider" class="field__slider"
+            min="1" max="15" step="0.5" value="7"
+            aria-label="Tasso di rendimento annuo" />
+          <span class="field__slider-value" id="rateValue">7%</span>
+        </div>
+        <div class="field__presets">
+          <button class="field__preset" data-rate="3">3% — Conto deposito</button>
+          <button class="field__preset is-active" data-rate="7">7% — S&P 500 storico</button>
+          <button class="field__preset" data-rate="10">10% — Ottimistico</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-empty" id="pageEmpty">
+      <span>⏳</span>
+      Inserisci il costo dell'acquisto per scoprire il suo vero prezzo nel tempo.
+    </div>
+
+    <div id="pageResults" hidden>
+
+      <!-- HERO: spendo vs investo -->
+      <div class="result-hero">
+        <div class="result-hero__question" id="heroQuestion">
+          Se investi <strong id="heroAmount">—</strong> invece di spenderli…
+        </div>
+        <div class="result-hero__vs">
+          <div class="result-hero__side result-hero__side--spend">
+            <div class="result-hero__side-label">Valore oggi se spendo</div>
+            <div class="result-hero__side-amount" id="heroSpend">—</div>
+          </div>
+          <div class="result-hero__arrow">→</div>
+          <div class="result-hero__side result-hero__side--invest">
+            <div class="result-hero__side-label">Valore tra 20 anni se investo</div>
+            <div class="result-hero__side-amount" id="heroInvest20">—</div>
+          </div>
+        </div>
+        <div class="result-hero__multiplier">
+          Il mercato trasformerebbe il tuo acquisto in <strong id="heroMultiplier">—</strong>
+        </div>
+      </div>
+
+      <!-- ORIZZONTI TEMPORALI -->
+      <div class="horizons" id="horizonsGrid"></div>
+
+      <!-- GRAFICO -->
+      <div class="chart-wrap">
+        <div class="chart-wrap__header">
+          <div class="chart-wrap__title">Crescita nel tempo se investito</div>
+          <div class="chart-legend">
+            <div class="chart-legend__item">
+              <div class="chart-legend__dot" style="background:#e07070"></div>
+              Costo dell'acquisto
+            </div>
+            <div class="chart-legend__item">
+              <div class="chart-legend__dot" style="background:var(--emerald)"></div>
+              Valore se investito
+            </div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="chartCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- EQUIVALENZE -->
+      <div class="equivalences">
+        <div class="equivalences__title">In prospettiva — tra 20 anni equivale a…</div>
+        <ul class="equiv-list" id="equivList"></ul>
+      </div>
+
+      <!-- COACH -->
+      <div class="coach-box">
+        <div class="coach-box__icon">🛡</div>
+        <div class="coach-box__text" id="coachText">—</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  'use strict';
+
+  /* ── NAVBAR MOBILE ── */
+  (function() {
+    const btn = document.getElementById('toolsHamburger');
+    const menu = document.getElementById('toolsMobile');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      open ? menu.setAttribute('hidden','') : menu.removeAttribute('hidden');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { btn.setAttribute('aria-expanded','false'); menu.setAttribute('hidden',''); }
+    });
+  })();
+
+  /* ── FORMATTERS ── */
+  const fmt = n => n.toLocaleString('it-IT', { style:'currency', currency:'EUR', maximumFractionDigits:0 });
+
+  /* ── DOM ── */
+  const purchaseName   = document.getElementById('purchaseName');
+  const purchaseAmount = document.getElementById('purchaseAmount');
+  const rateSlider     = document.getElementById('rateSlider');
+  const rateValue      = document.getElementById('rateValue');
+  const pageEmpty      = document.getElementById('pageEmpty');
+  const pageResults    = document.getElementById('pageResults');
+
+  /* ── CHART ── */
+  let chart = null;
+
+  function buildChart(labels, dataValues, cost) {
+    const ctx = document.getElementById('chartCanvas').getContext('2d');
+    const emeraldGrad = ctx.createLinearGradient(0, 0, 0, 260);
+    emeraldGrad.addColorStop(0, 'rgba(46,204,139,0.45)');
+    emeraldGrad.addColorStop(1, 'rgba(46,204,139,0.02)');
+    const redGrad = ctx.createLinearGradient(0, 0, 0, 260);
+    redGrad.addColorStop(0, 'rgba(224,112,112,0.3)');
+    redGrad.addColorStop(1, 'rgba(224,112,112,0.02)');
+
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Valore se investito',
+            data: dataValues,
+            borderColor: '#2ecc8b',
+            backgroundColor: emeraldGrad,
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: '#2ecc8b',
+          },
+          {
+            label: 'Costo acquisto',
+            data: labels.map(() => cost),
+            borderColor: 'rgba(224,112,112,0.6)',
+            backgroundColor: redGrad,
+            borderWidth: 1.5,
+            borderDash: [6, 4],
+            fill: false,
+            tension: 0,
+            pointRadius: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(16,18,26,0.97)',
+            borderColor: 'rgba(184,135,46,0.3)',
+            borderWidth: 1,
+            titleColor: '#9a9080',
+            bodyColor: '#e8dfc8',
+            padding: 12,
+            callbacks: {
+              title: items => `Anno ${items[0].label}`,
+              label: item => ` ${item.dataset.label}: ${fmt(item.raw)}`,
+              afterBody: items => {
+                const val  = items[0]?.raw || 0;
+                const gain = val - cost;
+                return gain > 0 ? [``, ` Guadagno: +${fmt(gain)}`] : [];
+              },
+            },
+          },
+        },
+        scales: {
+          x: { grid: { color: 'rgba(184,135,46,0.06)' }, ticks: { color: '#4a4640', font: { family:"'DM Sans'", size:11 }, maxTicksLimit: 10, callback: v => `${v}a` }, border: { color: 'rgba(184,135,46,0.1)' } },
+          y: { grid: { color: 'rgba(184,135,46,0.06)' }, ticks: { color: '#4a4640', font: { family:"'DM Sans'", size:11 }, callback: v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(0)+'k' : v }, border: { color: 'rgba(184,135,46,0.1)' } },
+        },
+      },
+    });
+  }
+
+  /* ── ANIMAZIONE VALORE ── */
+  function animateValue(el, target, formatter) {
+    const dur = 500, start = performance.now();
+    function step(ts) {
+      const p = Math.min((ts - start) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = formatter(Math.round(e * target));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = formatter(target);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ── CALCOLO FV ── */
+  const fv = (pv, rate, years) => pv * Math.pow(1 + rate / 100, years);
+
+  /* ── COMPUTE ── */
+  function compute() {
+    const amount = parseFloat(purchaseAmount.value);
+    const rate   = parseFloat(rateSlider.value);
+    const name   = purchaseName.value.trim() || 'questo acquisto';
+
+    rateValue.textContent = `${rate}%`;
+    updateSlider(rateSlider);
+
+    if (!amount || amount <= 0) {
+      pageEmpty.removeAttribute('hidden');
+      pageResults.setAttribute('hidden', '');
+      return;
+    }
+
+    pageEmpty.setAttribute('hidden', '');
+    pageResults.removeAttribute('hidden');
+
+    /* Valori a vari orizzonti */
+    const horizons = [5, 10, 20, 30];
+    const values   = horizons.map(y => Math.round(fv(amount, rate, y)));
+    const val20    = Math.round(fv(amount, rate, 20));
+
+    /* Hero */
+    document.getElementById('heroAmount').textContent = fmt(amount);
+    animateValue(document.getElementById('heroSpend'),    amount, fmt);
+    animateValue(document.getElementById('heroInvest20'), val20,  fmt);
+    document.getElementById('heroMultiplier').textContent = `${(val20 / amount).toFixed(1)}x`;
+
+    /* Orizzonti */
+    const grid = document.getElementById('horizonsGrid');
+    grid.innerHTML = '';
+    horizons.forEach((y, i) => {
+      const gain = values[i] - amount;
+      const card = document.createElement('div');
+      card.className = `horizon-card ${y === 20 ? 'is-highlighted' : ''}`;
+      card.innerHTML = `
+        <div class="horizon-card__years">Tra ${y} anni</div>
+        <div class="horizon-card__value">${fmt(values[i])}</div>
+        <div class="horizon-card__gain">+<strong>${fmt(gain)}</strong> di guadagno</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    /* Grafico */
+    const labels    = Array.from({ length: 31 }, (_, i) => i);
+    const dataChart = labels.map(y => Math.round(fv(amount, rate, y)));
+    buildChart(labels, dataChart, amount);
+
+    /* Equivalenze creative */
+    renderEquivalences(amount, val20, name);
+
+    /* Coach */
+    updateCoach(amount, val20, rate, name);
+  }
+
+  /* ── EQUIVALENZE ── */
+  function renderEquivalences(cost, val20, name) {
+    const list = document.getElementById('equivList');
+    list.innerHTML = '';
+
+    const items = [
+      { icon: '☕', text: `Quante volte potresti pagare un caffè al bar? <strong>${fmt(val20)}</strong> equivale a circa <strong>${Math.round(val20/1.5).toLocaleString('it-IT')} caffè</strong>.` },
+      { icon: '✈️', text: `A un volo medio da Roma a New York (≈€600), <strong>${fmt(val20)}</strong> corrisponde a circa <strong>${Math.round(val20/600)} voli transatlantici</strong>.` },
+      { icon: '📚', text: `Se ogni libro costa €20 in media, con <strong>${fmt(val20)}</strong> potresti comprare <strong>${Math.round(val20/20).toLocaleString('it-IT')} libri</strong>.` },
+      { icon: '🏖️', text: `A un costo di €1.500 per una settimana di vacanza in Europa, equivale a <strong>${Math.round(val20/1500)} settimane di vacanza</strong>.` },
+    ];
+
+    items.forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'equiv-item';
+      li.innerHTML = `<div class="equiv-item__icon">${item.icon}</div><div class="equiv-item__text">${item.text}</div>`;
+      list.appendChild(li);
+    });
+  }
+
+  /* ── COACH ── */
+  function updateCoach(amount, val20, rate, name) {
+    const mult = (val20 / amount).toFixed(1);
+    let msg = '';
+
+    if (amount < 100) {
+      msg = `Una piccola cifra, ma il principio è lo stesso. <strong>${fmt(amount)}</strong> investiti al ${rate}% valgono <strong>${fmt(val20)}</strong> tra 20 anni. La lezione non è smettere di vivere — è fare questa domanda <em>prima</em> di ogni acquisto impulsivo, non dopo.`;
+    } else if (amount < 500) {
+      msg = `<strong>${fmt(amount)}</strong> non sembra molto, ma al ${rate}% annuo diventano <strong>${fmt(val20)}</strong> in 20 anni. Il costo reale di ${name} non è ${fmt(amount)} — è <strong>${fmt(val20)}</strong>. Compralo se ne vale la pena. Non comprarlo perché "costa poco".`;
+    } else if (amount < 2000) {
+      msg = `Il vero prezzo di ${name} è <strong>${fmt(val20)}</strong> — quello che varrebbe tra 20 anni se investito al ${rate}%. Il mercato moltiplica il tuo denaro per <strong>${mult}x</strong>. Non è una ragione per non comprarlo, ma è la cifra giusta con cui confrontare il valore che ti darà.`;
+    } else {
+      msg = `Stai considerando una spesa significativa. <strong>${fmt(amount)}</strong> investiti al ${rate}% diventano <strong>${fmt(val20)}</strong> in 20 anni — un moltiplicatore di <strong>${mult}x</strong>. Prima di procedere: questo acquisto ti darà un valore equivalente o superiore nel tempo? Se sì, compralo senza rimorsi. Se no, è un acquisto emotivo travestito da necessità.`;
+    }
+
+    document.getElementById('coachText').innerHTML = msg;
+  }
+
+  /* ── SLIDER FILL ── */
+  function updateSlider(sl) {
+    const pct = ((parseFloat(sl.value) - parseFloat(sl.min)) / (parseFloat(sl.max) - parseFloat(sl.min))) * 100;
+    sl.style.background = `linear-gradient(to right, var(--gold) ${pct}%, var(--bg-elevated) ${pct}%)`;
+  }
+
+  /* ── PRESETS TASSO ── */
+  document.querySelectorAll('.field__preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.field__preset').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      rateSlider.value = btn.dataset.rate;
+      compute();
+    });
+  });
+  rateSlider.addEventListener('input', () => {
+    document.querySelectorAll('.field__preset').forEach(b => {
+      b.classList.toggle('is-active', parseFloat(b.dataset.rate) === parseFloat(rateSlider.value));
+    });
+    compute();
+  });
+
+  /* ── EVENTS ── */
+  purchaseAmount.addEventListener('input', compute);
+  purchaseName.addEventListener('input', compute);
+
+  /* ── INIT ── */
+  updateSlider(rateSlider);
+  compute();
+  </script>
+</body>
+</html>

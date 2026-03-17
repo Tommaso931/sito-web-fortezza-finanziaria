@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Costo per Utilizzo — Fortezza Finanziaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void:        #0a0b0e;
+      --bg-surface:     #10121a;
+      --bg-elevated:    #161923;
+      --gold-light:     #d4a843;
+      --gold:           #b8872e;
+      --gold-dim:       rgba(184,135,46,0.15);
+      --emerald:        #2ecc8b;
+      --emerald-dim:    rgba(46,204,139,0.12);
+      --text-primary:   #e8dfc8;
+      --text-secondary: #9a9080;
+      --text-muted:     #4a4640;
+      --border:         rgba(184,135,46,0.18);
+      --border-hover:   rgba(184,135,46,0.40);
+      --green:          #2ecc8b;
+      --yellow:         #e0a030;
+      --red:            #e05555;
+      --font-display:   'Cormorant Garamond', Georgia, serif;
+      --font-body:      'DM Sans', sans-serif;
+      --ease-out-expo:  cubic-bezier(0.16,1,0.3,1);
+      --duration-fast:  180ms;
+      --duration-base:  300ms;
+      --tools-nav-h:    64px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body { background: var(--bg-void); color: var(--text-primary); font-family: var(--font-body); font-size: 1rem; line-height: 1.6; min-height: 100vh; padding-top: var(--tools-nav-h); }
+
+    /* ════ TOOLS NAVBAR ════ */
+    .tools-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 900; height: var(--tools-nav-h); background: rgba(10,11,14,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); }
+    .tools-nav__inner { display: flex; align-items: center; gap: 1rem; height: 100%; max-width: 1280px; margin: 0 auto; padding: 0 clamp(1rem,3vw,2rem); }
+    .tools-nav__logo { display: flex; align-items: center; gap: 0.55rem; flex-shrink: 0; color: var(--gold-light); text-decoration: none; transition: opacity var(--duration-fast) ease; }
+    .tools-nav__logo:hover { opacity: 0.8; }
+    .tools-nav__logo svg { color: var(--gold); filter: drop-shadow(0 0 5px rgba(184,135,46,0.5)); }
+    .tools-nav__logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .tools-nav__logo-main { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em; color: var(--gold-light); }
+    .tools-nav__logo-sub  { font-size: 0.48rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-secondary); }
+    .tools-nav__inner::after { content: ''; display: block; width: 1px; height: 28px; background: var(--border); flex-shrink: 0; order: 1; }
+    .tools-nav__links { display: flex; align-items: center; gap: 0.15rem; flex: 1; overflow-x: auto; order: 2; scrollbar-width: none; }
+    .tools-nav__links::-webkit-scrollbar { display: none; }
+    .tools-nav__link { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 400; color: var(--text-secondary); text-decoration: none; white-space: nowrap; transition: background var(--duration-fast) ease, color var(--duration-fast) ease; flex-shrink: 0; }
+    .tools-nav__link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__link.is-active { background: var(--gold-dim); color: var(--gold-light); border: 1px solid var(--border); }
+    .tools-nav__home-btn { display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; order: 3; padding: 0.4rem 0.9rem; background: var(--gold-dim); border: 1px solid var(--border); border-radius: 6px; font-size: 0.75rem; font-weight: 500; color: var(--gold-light); text-decoration: none; transition: background var(--duration-fast) ease; }
+    .tools-nav__home-btn:hover { background: rgba(184,135,46,0.25); border-color: var(--border-hover); }
+    .tools-nav__hamburger { display: none; order: 4; flex-direction: column; justify-content: center; align-items: center; gap: 4px; width: 36px; height: 36px; border-radius: 6px; background: none; border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
+    .tools-nav__hamburger:hover { background: var(--gold-dim); }
+    .tools-nav__hamburger span { display: block; width: 18px; height: 1.5px; background: var(--text-secondary); border-radius: 2px; transition: transform var(--duration-base) var(--ease-out-expo), opacity var(--duration-fast) ease; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+    .tools-nav__mobile { position: absolute; top: var(--tools-nav-h); left: 0; right: 0; background: rgba(10,11,14,0.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; animation: mobileDropIn 0.25s var(--ease-out-expo) both; }
+    .tools-nav__mobile[hidden] { display: none; }
+    @keyframes mobileDropIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .tools-nav__mobile-link { display: block; padding: 0.75rem 0.85rem; border-radius: 8px; font-size: 0.88rem; color: var(--text-secondary); text-decoration: none; transition: background var(--duration-fast) ease, color var(--duration-fast) ease; }
+    .tools-nav__mobile-link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__mobile-link--home { margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 1rem; color: var(--gold-light); }
+    @media (max-width: 860px) { .tools-nav__links { display: none; } .tools-nav__home-btn { display: none; } .tools-nav__hamburger { display: flex; } .tools-nav__inner::after { display: none; } }
+
+    /* ════ LAYOUT ════ */
+    .page { max-width: 860px; margin: 0 auto; padding: 2.5rem clamp(1rem,3vw,2rem) 5rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    /* ── HEADER ── */
+    .page__header { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .page__header-icon { width: 48px; height: 48px; background: var(--gold-dim); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .page__eyebrow { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+    .page__title { font-family: var(--font-display); font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 700; line-height: 1.1; }
+    .page__title em { font-style: italic; background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── SPIEGAZIONE ── */
+    .explainer { padding: 1.25rem 1.5rem; background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 14px; }
+    .explainer p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8; }
+    .explainer p + p { margin-top: 0.75rem; }
+    .explainer strong { color: var(--text-primary); }
+    .explainer em { color: var(--gold-light); font-style: italic; }
+
+    /* ── SEMAFORO SOGLIE ── */
+    .thresholds { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem; }
+    .threshold-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid; }
+    .threshold-item--green  { background: rgba(46,204,139,0.06);  border-color: rgba(46,204,139,0.2); }
+    .threshold-item--yellow { background: rgba(224,160,48,0.06);  border-color: rgba(224,160,48,0.2); }
+    .threshold-item--red    { background: rgba(224,85,85,0.06);   border-color: rgba(224,85,85,0.2); }
+    .threshold-item__dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .threshold-item--green  .threshold-item__dot { background: var(--green); }
+    .threshold-item--yellow .threshold-item__dot { background: var(--yellow); }
+    .threshold-item--red    .threshold-item__dot { background: var(--red); }
+    .threshold-item__label { font-size: 0.72rem; font-weight: 600; margin-bottom: 0.15rem; }
+    .threshold-item--green  .threshold-item__label { color: var(--green); }
+    .threshold-item--yellow .threshold-item__label { color: var(--yellow); }
+    .threshold-item--red    .threshold-item__label { color: var(--red); }
+    .threshold-item__desc { font-size: 0.68rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── INPUT CARD ── */
+    .input-card { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
+    .input-card::before { content: ''; position: absolute; top: -1px; left: 15%; right: 15%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent); border-radius: 2px; }
+    .input-card__title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+    .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+    /* ── FIELD ── */
+    .field { display: flex; flex-direction: column; gap: 0.5rem; }
+    .field__label { font-size: 0.82rem; font-weight: 500; color: var(--text-secondary); }
+    .field__hint  { font-size: 0.7rem; color: var(--text-muted); line-height: 1.4; }
+    .field__input-wrap { display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease; }
+    .field__input-wrap:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,135,46,0.12); }
+    .field__prefix { padding: 0.75rem 0.9rem; font-family: var(--font-display); font-size: 1rem; color: var(--gold); background: rgba(184,135,46,0.08); border-right: 1px solid var(--border); flex-shrink: 0; white-space: nowrap; }
+    .field__suffix { padding: 0.75rem 0.9rem; font-size: 0.8rem; color: var(--text-muted); background: rgba(255,255,255,0.02); border-left: 1px solid var(--border); flex-shrink: 0; white-space: nowrap; }
+    .field__num { flex: 1; padding: 0.75rem 0.9rem; font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--gold-light); background: transparent; border: none; outline: none; -webkit-appearance: none; min-width: 0; }
+    .field__num::placeholder { color: var(--text-muted); font-weight: 400; font-size: 1rem; }
+    .field__text { flex: 1; padding: 0.75rem 0.9rem; font-family: var(--font-body); font-size: 0.95rem; color: var(--text-primary); background: transparent; border: none; outline: none; min-width: 0; }
+    .field__text::placeholder { color: var(--text-muted); }
+
+    /* ── RISULTATO PRINCIPALE ── */
+    .result-main { background: rgba(16,18,26,0.85); border: 2px solid var(--border); border-radius: 20px; padding: 2rem; text-align: center; position: relative; overflow: hidden; transition: border-color 0.5s ease; }
+    .result-main.is-green  { border-color: rgba(46,204,139,0.5); }
+    .result-main.is-yellow { border-color: rgba(224,160,48,0.5); }
+    .result-main.is-red    { border-color: rgba(224,85,85,0.5); }
+
+    /* Sfondo colorato leggero */
+    .result-main::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+    .result-main.is-green::before  { background: radial-gradient(ellipse at 50% 0%, rgba(46,204,139,0.06) 0%, transparent 70%); opacity: 1; }
+    .result-main.is-yellow::before { background: radial-gradient(ellipse at 50% 0%, rgba(224,160,48,0.06) 0%, transparent 70%); opacity: 1; }
+    .result-main.is-red::before    { background: radial-gradient(ellipse at 50% 0%, rgba(224,85,85,0.06) 0%, transparent 70%); opacity: 1; }
+
+    .result-main__label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; position: relative; z-index: 1; }
+
+    .result-main__cost { font-family: var(--font-display); font-size: clamp(3.5rem,8vw,5.5rem); font-weight: 700; line-height: 1; margin-bottom: 0.25rem; position: relative; z-index: 1; transition: color 0.5s ease; }
+    .result-main.is-green  .result-main__cost { color: var(--green); }
+    .result-main.is-yellow .result-main__cost { color: var(--yellow); }
+    .result-main.is-red    .result-main__cost { color: var(--red); }
+    .result-main__cost-sub { font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; color: var(--text-muted); position: relative; z-index: 1; }
+
+    /* Semaforo badge */
+    .result-main__badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.78rem; font-weight: 600; margin-top: 1rem; position: relative; z-index: 1; transition: all 0.5s ease; }
+    .result-main.is-green  .result-main__badge { background: rgba(46,204,139,0.12); border: 1px solid rgba(46,204,139,0.3); color: var(--green); }
+    .result-main.is-yellow .result-main__badge { background: rgba(224,160,48,0.12); border: 1px solid rgba(224,160,48,0.3); color: var(--yellow); }
+    .result-main.is-red    .result-main__badge { background: rgba(224,85,85,0.12); border: 1px solid rgba(224,85,85,0.3); color: var(--red); }
+    .result-main__badge-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; transition: background 0.5s ease; animation: pulseDot 2s ease-in-out infinite; }
+    .result-main.is-green  .result-main__badge-dot { background: var(--green); }
+    .result-main.is-yellow .result-main__badge-dot { background: var(--yellow); }
+    .result-main.is-red    .result-main__badge-dot { background: var(--red); }
+    @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+
+    /* ── BREAKDOWN STATS ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+    .stat-card { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .stat-card__label { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .stat-card__value { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
+    .stat-card__sub   { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* ── BARRA UTILIZZI ── */
+    .usage-bar-wrap { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+    .usage-bar-wrap__header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .usage-bar-wrap__title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+    .usage-bar-wrap__sub { font-size: 0.78rem; color: var(--text-secondary); }
+
+    /* Griglia utilizzi visivi */
+    .usage-dots { display: flex; flex-wrap: wrap; gap: 4px; max-height: 120px; overflow: hidden; }
+    .usage-dot { width: 12px; height: 12px; border-radius: 3px; background: var(--border); transition: background 0.3s ease; flex-shrink: 0; }
+    .usage-dot.is-used { background: var(--emerald); }
+    .usage-dot.is-remainder { background: rgba(46,204,139,0.2); }
+
+    /* Break-even */
+    .breakeven { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: rgba(184,135,46,0.06); border: 1px solid rgba(184,135,46,0.2); border-radius: 12px; flex-wrap: wrap; }
+    .breakeven__icon { font-size: 1.2rem; flex-shrink: 0; }
+    .breakeven__text { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.6; flex: 1; min-width: 180px; }
+    .breakeven__text strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ── COMPARATORE ── */
+    .compare-section { background: rgba(16,18,26,0.85); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
+    .compare-section__title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+    .compare-list { display: flex; flex-direction: column; gap: 0.5rem; list-style: none; }
+    .compare-item { display: grid; grid-template-columns: 1fr auto auto; gap: 1rem; align-items: center; padding: 0.75rem 1rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; }
+    .compare-item__name { font-size: 0.85rem; color: var(--text-secondary); }
+    .compare-item__cpu { font-family: var(--font-display); font-size: 1rem; font-weight: 700; }
+    .compare-item__badge { font-size: 0.65rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid; white-space: nowrap; }
+    .badge-green  { background: rgba(46,204,139,0.1);  border-color: rgba(46,204,139,0.3);  color: var(--green); }
+    .badge-yellow { background: rgba(224,160,48,0.1);  border-color: rgba(224,160,48,0.3);  color: var(--yellow); }
+    .badge-red    { background: rgba(224,85,85,0.1);   border-color: rgba(224,85,85,0.3);   color: var(--red); }
+
+    /* ── COACH ── */
+    .coach-box { background: rgba(184,135,46,0.06); border: 1px solid rgba(184,135,46,0.2); border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0; padding: 1.1rem 1.35rem; display: flex; gap: 0.85rem; align-items: flex-start; }
+    .coach-box__icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .coach-box__text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.75; }
+    .coach-box__text strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ── EMPTY ── */
+    .page-empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9rem; }
+    .page-empty span { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; opacity: 0.4; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .input-grid { grid-template-columns: 1fr; }
+      .stats-grid  { grid-template-columns: 1fr 1fr; }
+      .thresholds  { grid-template-columns: 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-void); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOOLS NAVBAR ══ -->
+  <header class="tools-nav" id="toolsNav">
+    <div class="tools-nav__inner">
+      <a href="index.html" class="tools-nav__logo" aria-label="Torna alla homepage">
+        <svg width="24" height="28" viewBox="0 0 32 36" fill="none">
+          <path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="tools-nav__logo-text">
+          <span class="tools-nav__logo-main">Fortezza</span>
+          <span class="tools-nav__logo-sub">Finanziaria</span>
+        </span>
+      </a>
+      <nav class="tools-nav__links" aria-label="Strumenti">
+        <a href="simulatore-int-comp.html" class="tools-nav__link"><span>📈</span><span>Interesse Composto</span></a>
+        <a href="budget.html"             class="tools-nav__link"><span>📊</span><span>Budget</span></a>
+        <a href="fondo-emergenza.html"    class="tools-nav__link"><span>🛡</span><span>Fondo Emergenza</span></a>
+        <a href="debiti.html"             class="tools-nav__link"><span>❄️</span><span>Debiti</span></a>
+        <a href="costo-opportunita.html"  class="tools-nav__link"><span>⏳</span><span>Costo Opportunità</span></a>
+        <a href="costo-utilizzo.html"     class="tools-nav__link is-active"><span>🧮</span><span>Costo Utilizzo</span></a>
+      </nav>
+      <a href="index.html" class="tools-nav__home-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Homepage
+      </a>
+      <button class="tools-nav__hamburger" id="toolsHamburger" aria-label="Menu strumenti" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="tools-nav__mobile" id="toolsMobile" hidden>
+      <a href="simulatore-int-comp.html" class="tools-nav__mobile-link">📈 Interesse Composto</a>
+      <a href="budget.html"             class="tools-nav__mobile-link">📊 Budget 40-30-20-10</a>
+      <a href="fondo-emergenza.html"    class="tools-nav__mobile-link">🛡 Fondo di Emergenza</a>
+      <a href="debiti.html"             class="tools-nav__mobile-link">❄️ Palla di Neve vs Valanga</a>
+      <a href="costo-opportunita.html"  class="tools-nav__mobile-link">⏳ Costo Opportunità</a>
+      <a href="costo-utilizzo.html"     class="tools-nav__mobile-link">🧮 Costo per Utilizzo</a>
+      <a href="index.html"                   class="tools-nav__mobile-link tools-nav__mobile-link--home">🏠 Torna alla Homepage</a>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <div class="page__header">
+      <div class="page__header-icon">🧮</div>
+      <div>
+        <p class="page__eyebrow">Strumento 06 · Fortezza Finanziaria</p>
+        <h1 class="page__title">Costo per <em>Utilizzo</em></h1>
+      </div>
+    </div>
+
+    <div class="explainer">
+      <p>Il prezzo di un oggetto non dice nulla sulla sua convenienza. Un giubbotto da <strong>€300</strong> che indossi ogni giorno per tre anni costa <em>€0,27 a utilizzo</em> — meno di un caffè. Una giacca da <strong>€80</strong> usata due volte all'anno per due anni costa <em>€20 a utilizzo</em>.</p>
+      <p>Questo tool smonta gli acquisti emozionali con la matematica: <strong>dividi il prezzo per gli utilizzi reali</strong> e scopri il vero costo di ogni oggetto.</p>
+    </div>
+
+    <!-- SOGLIE SEMAFORO -->
+    <div class="thresholds">
+      <div class="threshold-item threshold-item--green">
+        <div class="threshold-item__dot"></div>
+        <div>
+          <div class="threshold-item__label">🟢 Ottimo — sotto €1</div>
+          <div class="threshold-item__desc">Acquisto giustificato. Il costo per utilizzo è minimo rispetto al valore ricevuto.</div>
+        </div>
+      </div>
+      <div class="threshold-item threshold-item--yellow">
+        <div class="threshold-item__dot"></div>
+        <div>
+          <div class="threshold-item__label">🟡 Rifletti — €1 a €5</div>
+          <div class="threshold-item__desc">Costo accettabile ma non trascurabile. Valuta se lo userai davvero con quella frequenza.</div>
+        </div>
+      </div>
+      <div class="threshold-item threshold-item--red">
+        <div class="threshold-item__dot"></div>
+        <div>
+          <div class="threshold-item__label">🔴 Acquisto emotivo — oltre €5</div>
+          <div class="threshold-item__desc">Ogni volta che lo usi stai "bruciando" più di €5. Probabilmente non vale il prezzo.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-card">
+      <p class="input-card__title">Descrivi l'acquisto</p>
+      <div class="input-grid">
+
+        <div class="field" style="grid-column: 1 / -1;">
+          <label class="field__label" for="itemName">Cosa stai valutando di comprare?</label>
+          <div class="field__input-wrap">
+            <input type="text" id="itemName" class="field__text"
+              placeholder="Es. Giacca invernale, attrezzatura da sci, bici da corsa…"
+              maxlength="60" aria-label="Nome oggetto" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="itemPrice">Prezzo di acquisto</label>
+          <div class="field__input-wrap">
+            <span class="field__prefix">€</span>
+            <input type="number" id="itemPrice" class="field__num"
+              placeholder="250" min="1" max="999999" step="10" inputmode="numeric"
+              aria-label="Prezzo in euro" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="itemYears">Vita utile stimata</label>
+          <div class="field__input-wrap">
+            <input type="number" id="itemYears" class="field__num"
+              placeholder="3" min="1" max="50" step="1" inputmode="numeric"
+              aria-label="Anni di vita utile" />
+            <span class="field__suffix">anni</span>
+          </div>
+          <p class="field__hint">Per quanti anni pensi di usarlo prima di sostituirlo?</p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="itemUsesPerYear">Utilizzi all'anno</label>
+          <div class="field__input-wrap">
+            <input type="number" id="itemUsesPerYear" class="field__num"
+              placeholder="12" min="1" max="365" step="1" inputmode="numeric"
+              aria-label="Utilizzi per anno" />
+            <span class="field__suffix">volte/anno</span>
+          </div>
+          <p class="field__hint">Quante volte all'anno lo userai realisticamente?</p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="itemResale">Valore di rivendita (opzionale)</label>
+          <div class="field__input-wrap">
+            <span class="field__prefix">€</span>
+            <input type="number" id="itemResale" class="field__num"
+              placeholder="0" min="0" max="999999" step="10" inputmode="numeric"
+              aria-label="Valore di rivendita stimato" />
+          </div>
+          <p class="field__hint">Quanto pensi di ricavarne se lo rivendi (es. Vinted, Subito).</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EMPTY -->
+    <div class="page-empty" id="pageEmpty">
+      <span>🧮</span>
+      Inserisci prezzo, vita utile e utilizzi annui per calcolare il costo per utilizzo.
+    </div>
+
+    <!-- RISULTATI -->
+    <div id="pageResults" hidden>
+
+      <!-- RISULTATO PRINCIPALE CON SEMAFORO -->
+      <div class="result-main" id="resultMain">
+        <div class="result-main__label">Costo per singolo utilizzo</div>
+        <div class="result-main__cost" id="resultCost">—</div>
+        <div class="result-main__cost-sub" id="resultCostSub">—</div>
+        <div class="result-main__badge">
+          <div class="result-main__badge-dot"></div>
+          <span id="resultBadgeText">—</span>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card__label">Utilizzi totali</div>
+          <div class="stat-card__value" id="statTotalUses">—</div>
+          <div class="stat-card__sub" id="statTotalUsesSub">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Costo netto</div>
+          <div class="stat-card__value" id="statNetCost">—</div>
+          <div class="stat-card__sub">dopo rivendita</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Costo mensile</div>
+          <div class="stat-card__value" id="statMonthlyCost">—</div>
+          <div class="stat-card__sub">ammortizzato sulla vita utile</div>
+        </div>
+      </div>
+
+      <!-- BARRA UTILIZZI VISIVA -->
+      <div class="usage-bar-wrap">
+        <div class="usage-bar-wrap__header">
+          <span class="usage-bar-wrap__title">Utilizzi nel corso della vita utile</span>
+          <span class="usage-bar-wrap__sub" id="usageBarSub">—</span>
+        </div>
+        <div class="usage-dots" id="usageDots"></div>
+      </div>
+
+      <!-- BREAK-EVEN UTILIZZI -->
+      <div class="breakeven">
+        <div class="breakeven__icon">🎯</div>
+        <div class="breakeven__text" id="breakevenText">—</div>
+      </div>
+
+      <!-- COMPARATORE CON ALTERNATIVE -->
+      <div class="compare-section">
+        <div class="compare-section__title">Confronta con alternative</div>
+        <ul class="compare-list" id="compareList"></ul>
+      </div>
+
+      <!-- COACH -->
+      <div class="coach-box">
+        <div class="coach-box__icon">🛡</div>
+        <div class="coach-box__text" id="coachText">—</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  'use strict';
+
+  /* ── NAVBAR MOBILE ── */
+  (function() {
+    const btn = document.getElementById('toolsHamburger');
+    const menu = document.getElementById('toolsMobile');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      open ? menu.setAttribute('hidden','') : menu.removeAttribute('hidden');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { btn.setAttribute('aria-expanded','false'); menu.setAttribute('hidden',''); }
+    });
+  })();
+
+  /* ── FORMATTERS ── */
+  const fmt    = n => n.toLocaleString('it-IT', { style:'currency', currency:'EUR', maximumFractionDigits:0 });
+  const fmtCPU = n => {
+    if (n >= 100) return fmt(n);
+    if (n >= 10)  return '€' + n.toFixed(1);
+    if (n >= 1)   return '€' + n.toFixed(2);
+    return '€' + n.toFixed(2);
+  };
+
+  /* ── SEMAFORO ── */
+  function getColor(cpu) {
+    if (cpu < 1)  return 'green';
+    if (cpu < 5)  return 'yellow';
+    return 'red';
+  }
+  function getBadgeText(cpu, color) {
+    if (color === 'green')  return '🟢 Ottimo acquisto';
+    if (color === 'yellow') return '🟡 Riflettici bene';
+    return '🔴 Acquisto emotivo';
+  }
+
+  /* ── ANIMAZIONE ── */
+  function animateNumber(el, target, formatter) {
+    const dur = 500, start = performance.now();
+    function step(ts) {
+      const p = Math.min((ts - start) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = formatter(e * target);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = formatter(target);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ── COMPUTE ── */
+  function compute() {
+    const price        = parseFloat(document.getElementById('itemPrice').value);
+    const years        = parseFloat(document.getElementById('itemYears').value);
+    const usesPerYear  = parseFloat(document.getElementById('itemUsesPerYear').value);
+    const resale       = parseFloat(document.getElementById('itemResale').value) || 0;
+    const name         = document.getElementById('itemName').value.trim() || 'questo oggetto';
+
+    if (!price || price <= 0 || !years || years <= 0 || !usesPerYear || usesPerYear <= 0) {
+      document.getElementById('pageEmpty').removeAttribute('hidden');
+      document.getElementById('pageResults').setAttribute('hidden', '');
+      return;
+    }
+
+    document.getElementById('pageEmpty').setAttribute('hidden', '');
+    document.getElementById('pageResults').removeAttribute('hidden');
+
+    const totalUses  = Math.round(years * usesPerYear);
+    const netCost    = Math.max(0, price - resale);
+    const cpu        = netCost / totalUses;          // costo per utilizzo
+    const monthly    = netCost / (years * 12);
+    const color      = getColor(cpu);
+
+    /* Risultato principale */
+    const resultMain = document.getElementById('resultMain');
+    resultMain.className = `result-main is-${color}`;
+    animateNumber(document.getElementById('resultCost'), cpu, fmtCPU);
+    document.getElementById('resultCostSub').textContent = `ogni volta che usi ${name}`;
+    document.getElementById('resultBadgeText').textContent = getBadgeText(cpu, color);
+
+    /* Stats */
+    document.getElementById('statTotalUses').textContent   = totalUses.toLocaleString('it-IT');
+    document.getElementById('statTotalUsesSub').textContent = `in ${years} ${years===1?'anno':'anni'}`;
+    animateNumber(document.getElementById('statNetCost'), netCost, v => fmt(Math.round(v)));
+    animateNumber(document.getElementById('statMonthlyCost'), monthly, v => '€' + v.toFixed(2));
+
+    /* Barra utilizzi visiva */
+    renderUsageDots(totalUses);
+    document.getElementById('usageBarSub').textContent = `${usesPerYear} utilizzi/anno × ${years} anni = ${totalUses} utilizzi totali`;
+
+    /* Break-even */
+    const breakevenUses = Math.ceil(netCost / 1); // utilizzi per arrivare a €1/uso
+    document.getElementById('breakevenText').innerHTML =
+      `Per scendere sotto la soglia di <strong>€1 per utilizzo</strong> (la soglia verde), dovresti usare ${name} almeno <strong>${breakevenUses.toLocaleString('it-IT')} volte</strong> in totale — cioè <strong>${Math.ceil(breakevenUses/years).toLocaleString('it-IT')} volte all'anno</strong> per ${years} ${years===1?'anno':'anni'}.`;
+
+    /* Comparatore */
+    renderComparator(price, cpu, name, years, usesPerYear);
+
+    /* Coach */
+    updateCoach(price, cpu, totalUses, color, name, resale, monthly);
+  }
+
+  /* ── BARRA UTILIZZI ── */
+  function renderUsageDots(total) {
+    const container = document.getElementById('usageDots');
+    container.innerHTML = '';
+    const MAX_DOTS = 100;
+    const show = Math.min(total, MAX_DOTS);
+    for (let i = 0; i < show; i++) {
+      const dot = document.createElement('div');
+      dot.className = `usage-dot ${i < show ? 'is-used' : ''}`;
+      container.appendChild(dot);
+    }
+    if (total > MAX_DOTS) {
+      const more = document.createElement('div');
+      more.style.cssText = 'font-size:0.72rem;color:var(--text-muted);padding:2px 4px;align-self:center;';
+      more.textContent = `+${(total - MAX_DOTS).toLocaleString('it-IT')} altri`;
+      container.appendChild(more);
+    }
+  }
+
+  /* ── COMPARATORE ── */
+  function renderComparator(price, myCpu, name, years, usesPerYear) {
+    const list = document.getElementById('compareList');
+    list.innerHTML = '';
+
+    // Scenari alternativi: cosa succederebbe se usassi di più/meno
+    const scenarios = [
+      { label: `Usi ${name} il doppio (${Math.round(usesPerYear*2)} volte/anno)`, multiplier: 2 },
+      { label: `Usi ${name} la metà (${Math.max(1,Math.round(usesPerYear/2))} volte/anno)`,  multiplier: 0.5 },
+      { label: `Tieni ${name} un anno in più (${years+1} anni)`, extraYears: 1 },
+      { label: `Vendi ${name} dopo ${Math.max(1,Math.round(years/2))} anni`, halfLife: true },
+    ];
+
+    const resale = parseFloat(document.getElementById('itemResale').value) || 0;
+    const netCost = Math.max(0, price - resale);
+
+    scenarios.forEach(s => {
+      let altCpu;
+      let altUses;
+      if (s.multiplier) {
+        altUses = Math.round(years * usesPerYear * s.multiplier);
+        altCpu  = altUses > 0 ? netCost / altUses : netCost;
+      } else if (s.extraYears) {
+        altUses = Math.round((years + s.extraYears) * usesPerYear);
+        altCpu  = altUses > 0 ? netCost / altUses : netCost;
+      } else if (s.halfLife) {
+        altUses = Math.round(Math.max(1, years/2) * usesPerYear);
+        altCpu  = altUses > 0 ? netCost / altUses : netCost;
+      }
+
+      const c = getColor(altCpu);
+      const badgeClass = `badge-${c}`;
+      const badgeText  = c === 'green' ? '🟢 Ottimo' : c === 'yellow' ? '🟡 Rifletti' : '🔴 Emotivo';
+
+      const li = document.createElement('li');
+      li.className = 'compare-item';
+      li.innerHTML = `
+        <div class="compare-item__name">${s.label}</div>
+        <div class="compare-item__cpu" style="color:var(--${c === 'green' ? 'emerald' : c === 'yellow' ? 'yellow' : 'red'})">${fmtCPU(altCpu)}/uso</div>
+        <div class="compare-item__badge ${badgeClass}">${badgeText}</div>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  /* ── COACH ── */
+  function updateCoach(price, cpu, totalUses, color, name, resale, monthly) {
+    let msg = '';
+    const netCost = Math.max(0, price - resale);
+
+    if (color === 'green') {
+      msg = `<strong>€${cpu.toFixed(2)} per utilizzo</strong> è un ottimo risultato. ${name.charAt(0).toUpperCase() + name.slice(1)} si paga da solo con l'uso — è esattamente il tipo di acquisto che il libro incoraggia: alto utilizzo, lunga durata, basso costo reale per volta. Il costo mensile ammortizzato è solo <strong>€${monthly.toFixed(2)}</strong>.`;
+    } else if (color === 'yellow') {
+      msg = `<strong>€${cpu.toFixed(2)} per utilizzo</strong> è accettabile ma non trascurabile. Chiediti onestamente: userai davvero ${name} con quella frequenza, per tutti quegli anni? Se la risposta è "probabilmente sì", l'acquisto è giustificato. Se hai qualche dubbio, aspetta una settimana prima di decidere.`;
+    } else {
+      msg = `<strong>€${cpu.toFixed(2)} per utilizzo</strong> è un segnale chiaro: stai pagando molto per ogni volta che lo userai. Questo è il tipico acquisto emotivo — sembra un affare, ma nella pratica il costo reale è alto. Prima di procedere, prova a immaginare di usarlo ${Math.ceil(netCost/1)} volte: è realistico? Se no, mettilo in lista d'attesa per 30 giorni.`;
+    }
+
+    document.getElementById('coachText').innerHTML = msg;
+  }
+
+  /* ── EVENTS ── */
+  ['itemPrice','itemYears','itemUsesPerYear','itemResale','itemName'].forEach(id => {
+    document.getElementById(id).addEventListener('input', compute);
+  });
+
+  /* ── INIT ── */
+  compute();
+  </script>
+</body>
+</html>

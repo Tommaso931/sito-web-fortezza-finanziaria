@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fondo di Emergenza — Fortezza Finanziaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void:        #0a0b0e;
+      --bg-surface:     #10121a;
+      --bg-elevated:    #161923;
+      --gold-light:     #d4a843;
+      --gold:           #b8872e;
+      --gold-dim:       rgba(184,135,46,0.15);
+      --emerald:        #2ecc8b;
+      --emerald-dim:    rgba(46,204,139,0.12);
+      --text-primary:   #e8dfc8;
+      --text-secondary: #9a9080;
+      --text-muted:     #4a4640;
+      --border:         rgba(184,135,46,0.18);
+      --border-hover:   rgba(184,135,46,0.40);
+      --warn:           #e0a030;
+      --warn-dim:       rgba(224,160,48,0.12);
+      --danger:         #e05555;
+      --danger-dim:     rgba(224,85,85,0.1);
+      --font-display:   'Cormorant Garamond', Georgia, serif;
+      --font-body:      'DM Sans', sans-serif;
+      --ease-out-expo:  cubic-bezier(0.16,1,0.3,1);
+      --duration-fast:  180ms;
+      --duration-base:  300ms;
+      --tools-nav-h:    64px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body {
+      background: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-top: var(--tools-nav-h);
+    }
+
+    /* ════════════════════════════════════════
+       TOOLS NAVBAR
+    ════════════════════════════════════════ */
+    .tools-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 900; height: var(--tools-nav-h); background: rgba(10,11,14,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); }
+    .tools-nav__inner { display: flex; align-items: center; gap: 1rem; height: 100%; max-width: 1280px; margin: 0 auto; padding: 0 clamp(1rem,3vw,2rem); }
+    .tools-nav__logo { display: flex; align-items: center; gap: 0.55rem; flex-shrink: 0; color: var(--gold-light); text-decoration: none; transition: opacity var(--duration-fast) ease; }
+    .tools-nav__logo:hover { opacity: 0.8; }
+    .tools-nav__logo svg { color: var(--gold); filter: drop-shadow(0 0 5px rgba(184,135,46,0.5)); }
+    .tools-nav__logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .tools-nav__logo-main { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em; color: var(--gold-light); }
+    .tools-nav__logo-sub  { font-size: 0.48rem; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-secondary); }
+    .tools-nav__inner::after { content: ''; display: block; width: 1px; height: 28px; background: var(--border); flex-shrink: 0; order: 1; }
+    .tools-nav__links { display: flex; align-items: center; gap: 0.15rem; flex: 1; overflow-x: auto; order: 2; scrollbar-width: none; }
+    .tools-nav__links::-webkit-scrollbar { display: none; }
+    .tools-nav__link { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 400; color: var(--text-secondary); text-decoration: none; white-space: nowrap; transition: background var(--duration-fast) ease, color var(--duration-fast) ease; flex-shrink: 0; }
+    .tools-nav__link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__link.is-active { background: var(--gold-dim); color: var(--gold-light); border: 1px solid var(--border); }
+    .tools-nav__home-btn { display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; order: 3; padding: 0.4rem 0.9rem; background: var(--gold-dim); border: 1px solid var(--border); border-radius: 6px; font-size: 0.75rem; font-weight: 500; color: var(--gold-light); text-decoration: none; transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease; }
+    .tools-nav__home-btn:hover { background: rgba(184,135,46,0.25); border-color: var(--border-hover); }
+    .tools-nav__hamburger { display: none; order: 4; flex-direction: column; justify-content: center; align-items: center; gap: 4px; width: 36px; height: 36px; border-radius: 6px; background: none; border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; transition: background var(--duration-fast) ease; }
+    .tools-nav__hamburger:hover { background: var(--gold-dim); }
+    .tools-nav__hamburger span { display: block; width: 18px; height: 1.5px; background: var(--text-secondary); border-radius: 2px; transition: transform var(--duration-base) var(--ease-out-expo), opacity var(--duration-fast) ease; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+    .tools-nav__mobile { position: absolute; top: var(--tools-nav-h); left: 0; right: 0; background: rgba(10,11,14,0.97); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; animation: mobileDropIn 0.25s var(--ease-out-expo) both; }
+    .tools-nav__mobile[hidden] { display: none; }
+    @keyframes mobileDropIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .tools-nav__mobile-link { display: block; padding: 0.75rem 0.85rem; border-radius: 8px; font-size: 0.88rem; color: var(--text-secondary); text-decoration: none; transition: background var(--duration-fast) ease, color var(--duration-fast) ease; }
+    .tools-nav__mobile-link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__mobile-link--home { margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 1rem; color: var(--gold-light); }
+    @media (max-width: 860px) { .tools-nav__links { display: none; } .tools-nav__home-btn { display: none; } .tools-nav__hamburger { display: flex; } .tools-nav__inner::after { display: none; } }
+
+    /* ════════════════════════════════════════
+       LAYOUT
+    ════════════════════════════════════════ */
+    .fondo {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem clamp(1rem,3vw,2rem) 5rem;
+      display: flex; flex-direction: column; gap: 2rem;
+    }
+
+    /* ── HEADER ── */
+    .fondo__header { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .fondo__header-icon { width: 48px; height: 48px; background: var(--emerald-dim); border: 1px solid rgba(46,204,139,0.25); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--emerald); flex-shrink: 0; }
+    .fondo__eyebrow { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.25rem; }
+    .fondo__title { font-family: var(--font-display); font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 700; line-height: 1.1; }
+    .fondo__title em { font-style: italic; background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── CARD INPUT ── */
+    .input-card {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.75rem; position: relative;
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      display: flex; flex-direction: column; gap: 1.75rem;
+    }
+    .input-card::before {
+      content: ''; position: absolute;
+      top: -1px; left: 15%; right: 15%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+      border-radius: 2px;
+    }
+    .input-card__title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+
+    /* ── FIELD NUMERICO ── */
+    .field { display: flex; flex-direction: column; gap: 0.6rem; }
+    .field__label { font-size: 0.82rem; font-weight: 500; color: var(--text-secondary); }
+    .field__hint  { font-size: 0.72rem; color: var(--text-muted); margin-top: -0.2rem; }
+
+    .field__money {
+      display: flex; align-items: center; gap: 0;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; max-width: 300px;
+      transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+    }
+    .field__money:focus-within { border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(46,204,139,0.12); }
+    .field__money-prefix { padding: 0.75rem 0.9rem; font-family: var(--font-display); font-size: 1.1rem; color: var(--emerald); background: rgba(46,204,139,0.08); border-right: 1px solid var(--border); flex-shrink: 0; }
+    .field__money-input { flex: 1; padding: 0.75rem 1rem; font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--text-primary); background: transparent; border: none; outline: none; -webkit-appearance: none; }
+    .field__money-input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 1.1rem; }
+
+    /* ── SLIDER STABILITÀ ── */
+    .stability-wrap { display: flex; flex-direction: column; gap: 1rem; }
+    .stability-label { font-size: 0.82rem; font-weight: 500; color: var(--text-secondary); }
+
+    .stability-options {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem;
+    }
+    .stability-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      padding: 1rem 0.75rem; border-radius: 12px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      cursor: pointer; transition: all var(--duration-base) var(--ease-out-expo);
+      text-align: center;
+    }
+    .stability-btn:hover { border-color: var(--border-hover); background: rgba(255,255,255,0.05); }
+    .stability-btn.is-selected { border-color: var(--emerald); background: var(--emerald-dim); }
+    .stability-btn__icon { font-size: 1.6rem; }
+    .stability-btn__label { font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); line-height: 1.3; }
+    .stability-btn.is-selected .stability-btn__label { color: var(--emerald); }
+    .stability-btn__mesi {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+      color: var(--text-muted);
+    }
+    .stability-btn.is-selected .stability-btn__mesi { color: var(--emerald); }
+
+    /* ── RISULTATO PRINCIPALE ── */
+    .result-hero {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 2rem; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .result-hero::before {
+      content: ''; position: absolute;
+      top: -1px; left: 10%; right: 10%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+    }
+    .result-hero__label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .result-hero__amount {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 700; line-height: 1;
+      color: var(--emerald);
+      margin-bottom: 0.5rem;
+    }
+    .result-hero__sub { font-size: 0.88rem; color: var(--text-secondary); }
+    .result-hero__sub strong { color: var(--text-primary); }
+
+    /* ── GRIGLIA MINIMO / IDEALE ── */
+    .result-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+    .result-mini {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.35rem; position: relative; overflow: hidden;
+    }
+    .result-mini::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 2px; border-radius: 0 0 14px 14px;
+    }
+    .result-mini--min::after  { background: var(--gold); }
+    .result-mini--ideal::after { background: var(--emerald); }
+    .result-mini__badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.2rem 0.6rem; border-radius: 4px;
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .result-mini--min   .result-mini__badge { background: rgba(184,135,46,0.12); color: var(--gold-light); border: 1px solid rgba(184,135,46,0.25); }
+    .result-mini--ideal .result-mini__badge { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(46,204,139,0.25); }
+    .result-mini__label { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .result-mini__value { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; }
+    .result-mini--min   .result-mini__value { color: var(--gold-light); }
+    .result-mini--ideal .result-mini__value { color: var(--emerald); }
+    .result-mini__months { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    /* ── BARRA PROGRESSO VERSO OBIETTIVO ── */
+    .progress-wrap {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .progress-wrap__header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .progress-wrap__title  { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
+    .progress-wrap__pct    { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--emerald); }
+
+    .progress-track {
+      height: 12px; background: var(--bg-elevated);
+      border-radius: 6px; overflow: hidden; margin-bottom: 1rem;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 6px;
+      background: linear-gradient(90deg, var(--gold), var(--emerald));
+      width: 0%; transition: width 1s var(--ease-out-expo);
+    }
+
+    /* Risparmio mensile suggerito */
+    .progress-suggestion {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.75rem;
+    }
+    .progress-suggestion__label { font-size: 0.78rem; color: var(--text-secondary); }
+
+    .months-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .month-chip {
+      display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+      padding: 0.6rem 0.5rem;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px;
+      cursor: pointer; transition: all var(--duration-fast) ease;
+    }
+    .month-chip:hover { border-color: var(--border-hover); }
+    .month-chip__label { font-size: 0.62rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+    .month-chip__value { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: var(--gold-light); }
+
+    /* ── ALERT IMPOSTA DI BOLLO ── */
+    .alert-bollo {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1.1rem 1.35rem;
+      background: var(--warn-dim); border: 1px solid rgba(224,160,48,0.3);
+      border-left: 3px solid var(--warn); border-radius: 0 12px 12px 0;
+    }
+    .alert-bollo[hidden] { display: none; }
+    .alert-bollo__icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .alert-bollo__text { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.75; }
+    .alert-bollo__text strong { color: var(--warn); font-weight: 500; }
+
+    /* ── COACH BOX ── */
+    .coach-box { background: rgba(184,135,46,0.06); border: 1px solid rgba(184,135,46,0.2); border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0; padding: 1.1rem 1.35rem; display: flex; gap: 0.85rem; align-items: flex-start; }
+    .coach-box__icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .coach-box__text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.75; }
+    .coach-box__text strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ── STATO VUOTO ── */
+    .fondo-empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9rem; }
+    .fondo-empty span { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; opacity: 0.4; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .stability-options { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: 1fr; }
+      .months-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-void); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOOLS NAVBAR ══ -->
+  <header class="tools-nav" id="toolsNav">
+    <div class="tools-nav__inner">
+      <a href="index.html" class="tools-nav__logo" aria-label="Torna alla homepage">
+        <svg width="24" height="28" viewBox="0 0 32 36" fill="none">
+          <path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="tools-nav__logo-text">
+          <span class="tools-nav__logo-main">Fortezza</span>
+          <span class="tools-nav__logo-sub">Finanziaria</span>
+        </span>
+      </a>
+      <nav class="tools-nav__links" aria-label="Strumenti">
+        <a href="simulatore-int-comp.html" class="tools-nav__link"><span>📈</span><span>Interesse Composto</span></a>
+        <a href="budget.html"             class="tools-nav__link"><span>📊</span><span>Budget</span></a>
+        <a href="fondo-emergenza.html"    class="tools-nav__link is-active"><span>🛡</span><span>Fondo Emergenza</span></a>
+        <a href="debiti.html"             class="tools-nav__link"><span>❄️</span><span>Debiti</span></a>
+        <a href="costo-opportunita.html"  class="tools-nav__link"><span>⏳</span><span>Costo Opportunità</span></a>
+        <a href="costo-utilizzo.html"     class="tools-nav__link"><span>🧮</span><span>Costo Utilizzo</span></a>
+      </nav>
+      <a href="index.html" class="tools-nav__home-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Homepage
+      </a>
+      <button class="tools-nav__hamburger" id="toolsHamburger" aria-label="Menu strumenti" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="tools-nav__mobile" id="toolsMobile" hidden>
+      <a href="simulatore-int-comp.html" class="tools-nav__mobile-link">📈 Interesse Composto</a>
+      <a href="budget.html"             class="tools-nav__mobile-link">📊 Budget 40-30-20-10</a>
+      <a href="fondo-emergenza.html"    class="tools-nav__mobile-link">🛡 Fondo di Emergenza</a>
+      <a href="debiti.html"             class="tools-nav__mobile-link">❄️ Palla di Neve vs Valanga</a>
+      <a href="costo-opportunita.html"  class="tools-nav__mobile-link">⏳ Costo Opportunità</a>
+      <a href="costo-utilizzo.html"     class="tools-nav__mobile-link">🧮 Costo per Utilizzo</a>
+      <a href="index.html"                   class="tools-nav__mobile-link tools-nav__mobile-link--home">🏠 Torna alla Homepage</a>
+    </div>
+  </header>
+
+  <!-- ══ FONDO DI EMERGENZA ══ -->
+  <div class="fondo">
+
+    <!-- HEADER -->
+    <div class="fondo__header">
+      <div class="fondo__header-icon">
+        <svg width="24" height="24" viewBox="0 0 32 36" fill="none">
+          <path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <p class="fondo__eyebrow">Strumento 03 · Fortezza Finanziaria</p>
+        <h1 class="fondo__title">Simulatore <em>Fondo di Emergenza</em></h1>
+      </div>
+    </div>
+
+    <!-- INPUTS -->
+    <div class="input-card">
+      <p class="input-card__title">I tuoi dati</p>
+
+      <!-- Spese mensili -->
+      <div class="field">
+        <label class="field__label" for="expenseInput">Spese mensili medie</label>
+        <p class="field__hint">Somma tutto: affitto, bollette, spesa, trasporti, abbonamenti.</p>
+        <div class="field__money">
+          <span class="field__money-prefix">€</span>
+          <input type="number" id="expenseInput" class="field__money-input"
+            placeholder="1.200" min="0" max="99999" step="50" inputmode="numeric"
+            aria-label="Spese mensili medie in euro" />
+        </div>
+      </div>
+
+      <!-- Stabilità lavorativa -->
+      <div class="stability-wrap">
+        <p class="stability-label">Livello di stabilità lavorativa</p>
+        <div class="stability-options" role="radiogroup" aria-label="Stabilità lavorativa">
+
+          <button class="stability-btn" data-months="3" data-stability="alta"
+            role="radio" aria-checked="false" tabindex="0">
+            <span class="stability-btn__icon">🏛</span>
+            <span class="stability-btn__label">Dipendente<br>a tempo ind.</span>
+            <span class="stability-btn__mesi">3 mesi</span>
+          </button>
+
+          <button class="stability-btn" data-months="4" data-stability="media"
+            role="radio" aria-checked="false" tabindex="0">
+            <span class="stability-btn__icon">💼</span>
+            <span class="stability-btn__label">Dipendente<br>a termine / P.IVA</span>
+            <span class="stability-btn__mesi">4–5 mesi</span>
+          </button>
+
+          <button class="stability-btn" data-months="6" data-stability="bassa"
+            role="radio" aria-checked="false" tabindex="0">
+            <span class="stability-btn__icon">🎯</span>
+            <span class="stability-btn__label">Freelance /<br>settore precario</span>
+            <span class="stability-btn__mesi">6+ mesi</span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- STATO VUOTO -->
+    <div class="fondo-empty" id="fondoEmpty">
+      <span>🛡</span>
+      Inserisci le spese mensili e seleziona la tua situazione lavorativa.
+    </div>
+
+    <!-- RISULTATI -->
+    <div id="fondoResults" hidden>
+
+      <!-- OBIETTIVO PRINCIPALE -->
+      <div class="result-hero">
+        <p class="result-hero__label">Il tuo obiettivo Fortezza</p>
+        <div class="result-hero__amount" id="heroAmount">—</div>
+        <p class="result-hero__sub">
+          <strong id="heroMonths">—</strong> mesi di spese coperte ·
+          <span id="heroStability">—</span>
+        </p>
+      </div>
+
+      <!-- MINIMO / IDEALE -->
+      <div class="result-grid">
+        <div class="result-mini result-mini--min">
+          <div class="result-mini__badge">⚡ Minimo</div>
+          <div class="result-mini__label">Soglia di sicurezza base</div>
+          <div class="result-mini__value" id="minAmount">—</div>
+          <div class="result-mini__months" id="minMonths">—</div>
+        </div>
+        <div class="result-mini result-mini--ideal">
+          <div class="result-mini__badge">🛡 Ideale</div>
+          <div class="result-mini__label">Fortezza piena</div>
+          <div class="result-mini__value" id="idealAmount">—</div>
+          <div class="result-mini__months" id="idealMonths">—</div>
+        </div>
+      </div>
+
+      <!-- PROGRESSO + RISPARMIO MENSILE -->
+      <div class="progress-wrap">
+        <div class="progress-wrap__header">
+          <span class="progress-wrap__title">Quanto ci vuole per raggiungerlo?</span>
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">
+          Se metti da parte questa cifra ogni mese, ecco quando raggiungi l'obiettivo:
+        </p>
+        <div class="months-grid" id="monthsGrid"></div>
+      </div>
+
+      <!-- ALERT IMPOSTA DI BOLLO -->
+      <div class="alert-bollo" id="alertBollo" hidden>
+        <div class="alert-bollo__icon">⚠️</div>
+        <div class="alert-bollo__text" id="alertBolloText"></div>
+      </div>
+
+      <!-- COACH -->
+      <div class="coach-box">
+        <div class="coach-box__icon">🛡</div>
+        <div class="coach-box__text" id="coachText">—</div>
+      </div>
+
+    </div><!-- /#fondoResults -->
+
+  </div>
+
+  <script>
+  'use strict';
+
+  /* ── NAVBAR MOBILE ── */
+  (function() {
+    const btn  = document.getElementById('toolsHamburger');
+    const menu = document.getElementById('toolsMobile');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      open ? menu.setAttribute('hidden','') : menu.removeAttribute('hidden');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { btn.setAttribute('aria-expanded','false'); menu.setAttribute('hidden',''); }
+    });
+  })();
+
+  /* ── FORMATTATORI ── */
+  const fmt = n => n.toLocaleString('it-IT', { style:'currency', currency:'EUR', maximumFractionDigits:0 });
+
+  /* ── STATO ── */
+  let selectedMonths   = null;
+  let selectedStability = null;
+
+  /* ── DOM ── */
+  const expenseInput  = document.getElementById('expenseInput');
+  const fondoEmpty    = document.getElementById('fondoEmpty');
+  const fondoResults  = document.getElementById('fondoResults');
+  const heroAmount    = document.getElementById('heroAmount');
+  const heroMonths    = document.getElementById('heroMonths');
+  const heroStability = document.getElementById('heroStability');
+  const minAmount     = document.getElementById('minAmount');
+  const minMonths     = document.getElementById('minMonths');
+  const idealAmount   = document.getElementById('idealAmount');
+  const idealMonths   = document.getElementById('idealMonths');
+  const monthsGrid    = document.getElementById('monthsGrid');
+  const alertBollo    = document.getElementById('alertBollo');
+  const alertBolloText= document.getElementById('alertBolloText');
+  const coachText     = document.getElementById('coachText');
+
+  /* ── ANIMAZIONE NUMERO ── */
+  function animateValue(el, target, formatter) {
+    const dur = 600, start = performance.now();
+    function step(ts) {
+      const p = Math.min((ts - start) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = formatter(Math.round(e * target));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = formatter(target);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ── STABILITÀ BUTTONS ── */
+  document.querySelectorAll('.stability-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.stability-btn').forEach(b => {
+        b.classList.remove('is-selected');
+        b.setAttribute('aria-checked', 'false');
+      });
+      btn.classList.add('is-selected');
+      btn.setAttribute('aria-checked', 'true');
+      selectedMonths    = parseInt(btn.dataset.months);
+      selectedStability = btn.dataset.stability;
+      compute();
+    });
+
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+    });
+  });
+
+  /* ── CALCOLO ── */
+  function compute() {
+    const expenses = parseFloat(expenseInput.value);
+
+    if (!expenses || expenses <= 0 || !selectedMonths) {
+      fondoEmpty.removeAttribute('hidden');
+      fondoResults.setAttribute('hidden', '');
+      return;
+    }
+
+    fondoEmpty.setAttribute('hidden', '');
+    fondoResults.removeAttribute('hidden');
+
+    /* Obiettivi */
+    const minMesi   = 3;
+    const idealMesi = selectedMonths >= 6 ? 6 : selectedMonths + 1; // adatta al profilo
+    const targetMesi = selectedMonths;
+
+    const minTarget   = expenses * minMesi;
+    const idealTarget = expenses * idealMesi;
+    const heroTarget  = expenses * targetMesi;
+
+    /* Aggiorna hero */
+    animateValue(heroAmount, heroTarget, fmt);
+    heroMonths.textContent = targetMesi;
+    const stabilityLabel = {
+      alta:  'profilo stabile',
+      media: 'profilo intermedio',
+      bassa: 'profilo variabile'
+    }[selectedStability];
+    heroStability.textContent = stabilityLabel;
+
+    /* Minimo / Ideale */
+    animateValue(minAmount, minTarget, fmt);
+    minMonths.textContent = `${minMesi} mesi di spese`;
+    animateValue(idealAmount, idealTarget, fmt);
+    idealMonths.textContent = `${idealMesi} mesi di spese`;
+
+    /* Griglia risparmio mensile → tempo per raggiungere obiettivo */
+    const savingOptions = [50, 100, 150, 200, 300, 500];
+    monthsGrid.innerHTML = '';
+    savingOptions.forEach(monthly => {
+      const mesiNecessari = Math.ceil(heroTarget / monthly);
+      const anni = Math.floor(mesiNecessari / 12);
+      const mesiRest = mesiNecessari % 12;
+      let label = '';
+      if (anni > 0 && mesiRest > 0) label = `${anni}a ${mesiRest}m`;
+      else if (anni > 0)             label = `${anni} ${anni===1?'anno':'anni'}`;
+      else                           label = `${mesiNecessari} mesi`;
+
+      const chip = document.createElement('div');
+      chip.className = 'month-chip';
+      chip.innerHTML = `
+        <span class="month-chip__label">${fmt(monthly)}/mese</span>
+        <span class="month-chip__value">${label}</span>
+      `;
+      monthsGrid.appendChild(chip);
+    });
+
+    /* Alert imposta di bollo (soglia > €5.000) */
+    if (heroTarget > 5000) {
+      const bolloAnnuo = heroTarget * 0.002;
+      alertBolloText.innerHTML = `
+        Il tuo fondo di emergenza supera i <strong>€ 5.000</strong>: su conti deposito e strumenti finanziari
+        si applica l'<strong>imposta di bollo dello 0,2% annuo</strong>.
+        Sul tuo obiettivo di <strong>${fmt(heroTarget)}</strong> questo corrisponde a circa
+        <strong>${fmt(bolloAnnuo)}/anno</strong>.
+        Considera di tenere i primi €5.000 su un conto corrente liquido e il resto su un conto deposito
+        vincolato per massimizzare il rendimento netto.
+      `;
+      alertBollo.removeAttribute('hidden');
+    } else {
+      alertBollo.setAttribute('hidden', '');
+    }
+
+    /* Coach */
+    updateCoach(expenses, heroTarget, selectedStability, targetMesi);
+  }
+
+  /* ── COACH ── */
+  function updateCoach(expenses, target, stability, mesi) {
+    let msg = '';
+
+    if (stability === 'alta') {
+      msg = `Con un contratto stabile, <strong>3 mesi</strong> sono la soglia minima raccomandata dal libro.
+        Il tuo obiettivo è <strong>${fmt(target)}</strong>: tienili in un conto corrente separato,
+        non investiti — la liquidità immediata è la funzione di questo fondo, non il rendimento.`;
+    } else if (stability === 'media') {
+      msg = `Con un contratto a termine o partita IVA, la variabilità del reddito richiede
+        più protezione. <strong>${mesi} mesi</strong> ti danno il tempo di trovare nuove opportunità
+        senza pressione. Obiettivo: <strong>${fmt(target)}</strong>. Costruiscilo prima di investire
+        qualsiasi altra somma.`;
+    } else {
+      msg = `Freelance e settori precari richiedono una Fortezza più solida: <strong>6 mesi</strong>
+        di spese coperte sono il punto di partenza, non il massimo.
+        Con <strong>${fmt(target)}</strong> puoi affrontare periodi di inattività senza intaccare
+        gli investimenti o fare debiti. È la base di tutto il resto.`;
+    }
+
+    coachText.innerHTML = msg;
+  }
+
+  /* ── EVENT LISTENERS ── */
+  expenseInput.addEventListener('input', compute);
+
+  </script>
+</body>
+</html>

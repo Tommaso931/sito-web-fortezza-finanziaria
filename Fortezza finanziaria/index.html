@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fortezza Finanziaria — Metti al sicuro i tuoi soldi</title>
+  <meta name="description" content="Il portale ufficiale della collana Fortezza Finanziaria. Strumenti, strategie e contenuti esclusivi per costruire la tua libertà finanziaria." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="CSS/styles.css" />
+</head>
+<body>
+
+  <!-- ================================================
+       NAVBAR — Fase 1
+  ================================================ -->
+  <header class="navbar" id="navbar">
+    <div class="navbar__inner">
+
+      <a href="index.html" class="navbar__logo" aria-label="Torna alla homepage">
+        <span class="navbar__logo-icon" aria-hidden="true">
+          <svg width="32" height="36" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="navbar__logo-text">
+          <span class="navbar__logo-main">Fortezza</span>
+          <span class="navbar__logo-sub">Finanziaria</span>
+        </span>
+      </a>
+
+      <nav class="navbar__nav" aria-label="Navigazione principale">
+        <ul class="navbar__links" role="list">
+          <li><a href="#libri"     class="navbar__link"><span>I Libri</span></a></li>
+          <li><a href="#contenuti-extra" class="navbar__link"><span>Contenuti Extra</span></a></li>
+          <li><a href="#blog"      class="navbar__link"><span>Recensioni</span></a></li>
+          <li><a href="#chi-siamo" class="navbar__link"><span>Chi Siamo</span></a></li>
+        </ul>
+      </nav>
+
+      <a href="#attiva" class="navbar__cta" id="navbarCta">
+        <span class="navbar__cta-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Attiva il tuo Libro
+      </a>
+
+      <button class="navbar__hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span class="navbar__hamburger-bar"></span>
+        <span class="navbar__hamburger-bar"></span>
+        <span class="navbar__hamburger-bar"></span>
+      </button>
+
+    </div>
+
+    <div class="navbar__mobile" id="mobileMenu" role="dialog" aria-label="Menu mobile" aria-modal="true" hidden>
+      <nav aria-label="Menu mobile">
+        <ul class="navbar__mobile-links" role="list">
+          <li><a href="#libri"     class="navbar__mobile-link" data-close>I Libri</a></li>
+          <li><a href="#contenuti extra" class="navbar__mobile-link" data-close>Contenuti Extra</a></li>
+          <li><a href="#recensioni"      class="navbar__mobile-link" data-close>Recensioni</a></li>
+          <li><a href="#chi-siamo" class="navbar__mobile-link" data-close>Chi Siamo</a></li>
+        </ul>
+        <a href="#attiva" class="navbar__cta navbar__cta--mobile" data-close>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Attiva il tuo Libro
+        </a>
+      </nav>
+    </div>
+  </header>
+
+
+  <main>
+
+    <!-- ================================================
+         HERO SECTION — Fase 2
+    ================================================ -->
+    <section class="hero" id="hero" aria-labelledby="heroHeadline">
+
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__bg-grid"></div>
+        <div class="hero__bg-orb hero__bg-orb--gold"></div>
+        <div class="hero__bg-orb hero__bg-orb--emerald"></div>
+        <div class="hero__bg-noise"></div>
+      </div>
+
+      <div class="hero__inner">
+
+        <div class="hero__content">
+
+          <div class="hero__badge" data-reveal>
+            <span class="hero__badge-dot" aria-hidden="true"></span>
+            Collana Fortezza Finanziaria · Vol. I
+          </div>
+
+          <h1 class="hero__headline" id="heroHeadline" data-reveal data-reveal-delay="1">
+            Mettere al sicuro<br>
+            <em>i soldi.</em>
+          </h1>
+
+          <p class="hero__subtitle" data-reveal data-reveal-delay="2">
+            Gestisci stipendio, casa e spese quotidiane per costruire
+            la tua <strong>libertà finanziaria</strong>, proteggerti dall'inflazione
+            e iniziare a investire — anche partendo da zero.
+          </p>
+
+          <ul class="hero__pills" aria-label="Cosa imparerai" data-reveal data-reveal-delay="3">
+            <li class="hero__pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Fondo di Emergenza
+            </li>
+            <li class="hero__pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Regola 50/30/20
+            </li>
+            <li class="hero__pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Interesse Composto
+            </li>
+            <li class="hero__pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Debiti &amp; ETF
+            </li>
+          </ul>
+
+          <div class="hero__cta-row" data-reveal data-reveal-delay="4">
+            <a href="#attiva" class="hero__cta-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Attiva il tuo Libro
+            </a>
+            <a href="#libri" class="hero__cta-secondary">
+              Scopri la Collana
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+
+          <p class="hero__proof" data-reveal data-reveal-delay="5">
+            <span class="hero__proof-num" id="readerCount">0</span>
+            <span>lettori stanno già costruendo la loro Fortezza</span>
+          </p>
+
+        </div>
+
+        <div class="hero__visual" aria-hidden="true" data-reveal data-reveal-delay="2">
+          <div class="hero__book-scene">
+            <div class="hero__book-glow"></div>
+            <div class="hero__book">
+              <div class="hero__book-face hero__book-front hero__book-front--img">
+                <img src="assets/immagini/copertina-definitiva.png" alt="Metti al sicuro i soldi — Alex Venturini" class="hero__book-img" />
+                <div class="hero__book-shine"></div>
+              </div>
+              <div class="hero__book-face hero__book-spine">
+                <span class="hero__book-spine-text">Fortezza Finanziaria · Alex Venturini</span>
+              </div>
+              <div class="hero__book-face hero__book-back"></div>
+              <div class="hero__book-face hero__book-top"></div>
+              <div class="hero__book-face hero__book-bottom"></div>
+              <div class="hero__book-pages"></div>
+            </div>
+            <div class="hero__badge-float hero__badge-float--1">
+              <span class="hero__badge-float-icon">📈</span>
+              <span>+7% annuo<br><small>interesse composto</small></span>
+            </div>
+            <div class="hero__badge-float hero__badge-float--2">
+              <span class="hero__badge-float-icon">🛡</span>
+              <span>Fondo<br><small>di emergenza</small></span>
+            </div>
+            <div class="hero__badge-float hero__badge-float--3">
+              <span class="hero__badge-float-icon">⚡</span>
+              <span>15 min/mese<br><small>manutenzione</small></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="hero__scroll" aria-hidden="true">
+        <div class="hero__scroll-line"></div>
+        <span>Scorri</span>
+      </div>
+
+    </section>
+
+
+    <!-- ================================================
+         SEZIONE LIBRI — Fase 4
+    ================================================ -->
+    <section class="books" id="libri" aria-labelledby="booksTitle">
+
+      <div class="books__bg" aria-hidden="true">
+        <div class="books__bg-orb books__bg-orb--1"></div>
+        <div class="books__bg-orb books__bg-orb--2"></div>
+        <div class="books__bg-line"></div>
+      </div>
+
+      <div class="books__inner">
+
+        <div class="books__header" data-reveal>
+          <span class="books__eyebrow">
+            <span class="books__eyebrow-line" aria-hidden="true"></span>
+            La Collana
+            <span class="books__eyebrow-line" aria-hidden="true"></span>
+          </span>
+          <h2 class="books__title" id="booksTitle">
+            Finanza per<br><em>Persone Normali</em>
+          </h2>
+          <p class="books__subtitle">
+            Una collana pensata per chi non ha mai studiato economia —
+            ma vuole prendere il controllo del proprio denaro, un volume alla volta.
+          </p>
+        </div>
+
+        <div class="books__carousel-wrap" data-reveal data-reveal-delay="1">
+
+          <button class="books__arrow books__arrow--prev" id="booksPrev" aria-label="Volume precedente" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="books__track-outer">
+            <div class="books__track" id="booksTrack" role="list">
+
+              <article class="books__card books__card--active" role="listitem" aria-label="Volume I — Metti al sicuro i soldi">
+                <div class="books__card-inner">
+                  <div class="books__book-wrap" aria-hidden="true">
+                    <div class="books__book-scene">
+                      <div class="books__book-glow"></div>
+                      <div class="books__book">
+                        <div class="books__book-face books__book-front books__book-front--img">
+                          <img src="assets/immagini/copertina-definitiva.png" alt="Metti al sicuro i soldi — Alex Venturini" class="books__book-img" />
+                          <div class="books__book-shine"></div>
+                        </div>
+                        <div class="books__book-face books__book-spine">
+                          <span class="books__book-spine-text">Fortezza Finanziaria · Vol. I</span>
+                        </div>
+                        <div class="books__book-face books__book-back"></div>
+                        <div class="books__book-pages"></div>
+                      </div>
+                    </div>
+                    <div class="books__available-badge">
+                      <span class="books__available-dot" aria-hidden="true"></span>
+                      Disponibile ora
+                    </div>
+                  </div>
+
+                  <div class="books__card-content">
+                    <div class="books__card-meta">
+                      <span class="books__card-vol">Volume I</span>
+                      <span class="books__card-tag books__card-tag--active">Disponibile</span>
+                    </div>
+                    <h3 class="books__card-title">Mettere al sicuro<br><em>i soldi</em></h3>
+                    <p class="books__card-desc">
+                      Il punto di partenza di ogni percorso finanziario sano: come gestire
+                      lo stipendio, costruire un fondo di emergenza, eliminare i debiti
+                      e iniziare a investire — anche con poco, anche partendo da zero.
+                    </p>
+                    <ul class="books__topics" aria-label="Argomenti del volume">
+                      <li class="books__topic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Fondo di Emergenza</li>
+                      <li class="books__topic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Regola 50/30/20</li>
+                      <li class="books__topic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Interesse Composto</li>
+                      <li class="books__topic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Debiti &amp; ETF base</li>
+                      <li class="books__topic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Budget mensile</li>
+                      <li class="books__topic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Protezione dall'inflazione</li>
+                    </ul>
+                    <div class="books__card-cta">
+                      <a href="#attiva" class="books__cta-primary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        Attiva i contenuti
+                      </a>
+                      <a href="https://www.amazon.it" target="_blank" rel="noopener" class="books__cta-secondary">
+                        Acquista su Amazon
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="books__card books__card--soon" role="listitem" aria-label="Volume II — In arrivo">
+                <div class="books__card-inner">
+                  <div class="books__book-wrap" aria-hidden="true">
+                    <div class="books__book-scene">
+                      <div class="books__book-glow books__book-glow--muted"></div>
+                      <div class="books__book books__book--soon">
+                        <div class="books__book-face books__book-front">
+                          <div class="books__book-cover books__book-cover--soon">
+                            <div class="books__book-cover-top">
+                              <span class="books__book-series">Fortezza Finanziaria</span>
+                              <span class="books__book-vol">Vol. II</span>
+                            </div>
+                            <div class="books__book-cover-icon">
+                              <svg width="48" height="54" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>
+                            </div>
+                            <div class="books__book-cover-bottom">
+                              <span class="books__book-title-mini">Titolo<br><em>non disponibile</em></span>
+                              <span class="books__book-author-mini">Alex Venturini</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="books__book-face books__book-spine"><span class="books__book-spine-text">Fortezza Finanziaria · Vol. II</span></div>
+                        <div class="books__book-face books__book-back"></div>
+                        <div class="books__book-pages books__book-pages--soon"></div>
+                      </div>
+                      <div class="books__soon-overlay" aria-hidden="true"><span class="books__soon-label">In arrivo</span></div>
+                    </div>
+                  </div>
+                  <div class="books__card-content">
+                    <div class="books__card-meta">
+                      <span class="books__card-vol">Volume II</span>
+                      <span class="books__card-tag books__card-tag--soon">In arrivo</span>
+                    </div>
+                    <h3 class="books__card-title books__card-title--muted">Titolo<br><em>non disponibile</em></h3>
+                    <p class="books__card-desc">Descrizione non disponibile</p>
+                    <ul class="books__topics books__topics--muted">
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                    </ul>
+                    <div class="books__card-cta">
+                      <button class="books__cta-notify" data-vol="II" aria-label="Ricevi notifica per il Volume II">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Notificami all'uscita
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="books__card books__card--soon" role="listitem" aria-label="Volume III — In arrivo">
+                <div class="books__card-inner">
+                  <div class="books__book-wrap" aria-hidden="true">
+                    <div class="books__book-scene">
+                      <div class="books__book-glow books__book-glow--muted"></div>
+                      <div class="books__book books__book--soon">
+                        <div class="books__book-face books__book-front">
+                          <div class="books__book-cover books__book-cover--soon">
+                            <div class="books__book-cover-top">
+                              <span class="books__book-series">Fortezza Finanziaria</span>
+                              <span class="books__book-vol">Vol. III</span>
+                            </div>
+                            <div class="books__book-cover-icon">
+                              <svg width="48" height="54" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/><path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>
+                            </div>
+                            <div class="books__book-cover-bottom">
+                              <span class="books__book-title-mini">Titolo<br>non disponibile</span>
+                              <span class="books__book-author-mini">Alex Venturini</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="books__book-face books__book-spine"><span class="books__book-spine-text">Fortezza Finanziaria · Vol. III</span></div>
+                        <div class="books__book-face books__book-back"></div>
+                        <div class="books__book-pages books__book-pages--soon"></div>
+                      </div>
+                      <div class="books__soon-overlay" aria-hidden="true"><span class="books__soon-label">In arrivo</span></div>
+                    </div>
+                  </div>
+                  <div class="books__card-content">
+                    <div class="books__card-meta">
+                      <span class="books__card-vol">Volume III</span>
+                      <span class="books__card-tag books__card-tag--soon">In arrivo</span>
+                    </div>
+                    <h3 class="books__card-title books__card-title--muted">Titolo<br><em>non disponibile</em></h3>
+                    <p class="books__card-desc">Descrizione non disponibile</p>
+                    <ul class="books__topics books__topics--muted">
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                    </ul>
+                    <div class="books__card-cta">
+                      <button class="books__cta-notify" data-vol="III" aria-label="Ricevi notifica per il Volume III">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Notificami all'uscita
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="books__card books__card--soon" role="listitem" aria-label="Volume IV — In arrivo">
+                <div class="books__card-inner">
+                  <div class="books__book-wrap" aria-hidden="true">
+                    <div class="books__book-scene">
+                      <div class="books__book-glow books__book-glow--muted"></div>
+                      <div class="books__book books__book--soon">
+                        <div class="books__book-face books__book-front">
+                          <div class="books__book-cover books__book-cover--soon">
+                            <div class="books__book-cover-top">
+                              <span class="books__book-series">Fortezza Finanziaria</span>
+                              <span class="books__book-vol">Vol. IV</span>
+                            </div>
+                            <div class="books__book-cover-icon">
+                              <svg width="48" height="54" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" opacity="0.5"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>
+                            </div>
+                            <div class="books__book-cover-bottom">
+                              <span class="books__book-title-mini">Libertà<br>finanziaria</span>
+                              <span class="books__book-author-mini">Alex Venturini</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="books__book-face books__book-spine"><span class="books__book-spine-text">Fortezza Finanziaria · Vol. IV</span></div>
+                        <div class="books__book-face books__book-back"></div>
+                        <div class="books__book-pages books__book-pages--soon"></div>
+                      </div>
+                      <div class="books__soon-overlay" aria-hidden="true"><span class="books__soon-label">In arrivo</span></div>
+                    </div>
+                  </div>
+                  <div class="books__card-content">
+                    <div class="books__card-meta">
+                      <span class="books__card-vol">Volume IV</span>
+                      <span class="books__card-tag books__card-tag--soon">In arrivo</span>
+                    </div>
+                    <h3 class="books__card-title books__card-title--muted">Titolo<br><em>non disponibile</em></h3>
+                    <p class="books__card-desc">Descrizione non disponibile</p>
+                    <ul class="books__topics books__topics--muted">
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                      <li class="books__topic">---</li><li class="books__topic">---</li>
+                    </ul>
+                    <div class="books__card-cta">
+                      <button class="books__cta-notify" data-vol="IV" aria-label="Ricevi notifica per il Volume IV">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Notificami all'uscita
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+
+          <button class="books__arrow books__arrow--next" id="booksNext" aria-label="Volume successivo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+        </div>
+
+        <div class="books__dots" role="tablist" aria-label="Volumi della collana" id="booksDots">
+          <button class="books__dot books__dot--active" role="tab" aria-selected="true"  aria-label="Volume I"   data-index="0"></button>
+          <button class="books__dot"                   role="tab" aria-selected="false" aria-label="Volume II"  data-index="1"></button>
+          <button class="books__dot"                   role="tab" aria-selected="false" aria-label="Volume III" data-index="2"></button>
+          <button class="books__dot"                   role="tab" aria-selected="false" aria-label="Volume IV"  data-index="3"></button>
+        </div>
+
+        <p class="books__counter" aria-live="polite" id="booksCounter">
+          <span id="booksCurrentNum">01</span>
+          <span class="books__counter-sep" aria-hidden="true">/</span>
+          <span class="books__counter-total">04</span>
+        </p>
+
+      </div>
+
+      <div class="books__toast" id="booksToast" role="status" aria-live="polite" aria-atomic="true" hidden>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="booksToastMsg"></span>
+      </div>
+
+    </section>
+
+    <section id="contenuti-extra" style="min-height:60vh;display:grid;place-items:center;color:var(--text-muted);font-family:var(--font-body);border-top:1px solid var(--border)">#Contenuti extra</section>
+
+    <!-- ================================================
+         SEZIONE RECENSIONI — Fase 5
+    ================================================ -->
+    <section class="reviews" id="blog" aria-labelledby="reviewsTitle">
+
+      <div class="reviews__bg" aria-hidden="true">
+        <div class="reviews__bg-orb reviews__bg-orb--1"></div>
+        <div class="reviews__bg-orb reviews__bg-orb--2"></div>
+      </div>
+
+      <div class="reviews__inner">
+
+        <div class="reviews__header" data-reveal>
+          <span class="reviews__eyebrow">
+            <span class="reviews__eyebrow-line" aria-hidden="true"></span>
+            Recensioni
+            <span class="reviews__eyebrow-line" aria-hidden="true"></span>
+          </span>
+
+          <h2 class="reviews__title" id="reviewsTitle">
+            Cosa dicono i<br><em>lettori</em>
+          </h2>
+
+          <div class="reviews__aggregate" aria-label="Rating 4.8 su 5 basato su 312 recensioni">
+            <div class="reviews__aggregate-score">
+              <span class="reviews__score-num" id="reviewsScore">0</span>
+              <span class="reviews__score-max">/5</span>
+            </div>
+            <div class="reviews__aggregate-right">
+              <div class="reviews__stars" aria-hidden="true">
+                <span class="reviews__star reviews__star--full">&#9733;</span>
+                <span class="reviews__star reviews__star--full">&#9733;</span>
+                <span class="reviews__star reviews__star--full">&#9733;</span>
+                <span class="reviews__star reviews__star--full">&#9733;</span>
+                <span class="reviews__star reviews__star--half">&#9733;</span>
+              </div>
+              <p class="reviews__aggregate-label">
+                <span class="reviews__count" id="reviewsCount">0</span> recensioni verificate
+              </p>
+              <div class="reviews__sources">
+                <span class="reviews__source-badge">Amazon</span>
+                <span class="reviews__source-badge">Google</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews__carousel-wrap" data-reveal data-reveal-delay="1">
+          <div class="reviews__track-outer">
+            <div class="reviews__track" id="reviewsTrack" role="list">
+
+              <article class="reviews__card" role="listitem">
+                <div class="reviews__card-top">
+                  <div class="reviews__quote-mark" aria-hidden="true">&ldquo;</div>
+                  <div class="reviews__source-info">
+                    <span class="reviews__card-source reviews__card-source--amazon">Amazon</span>
+                    <div class="reviews__card-stars" aria-label="5 stelle su 5"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                  </div>
+                </div>
+                <blockquote class="reviews__text">Finalmente un libro di finanza personale scritto per chi non ha mai aperto un estratto conto con curiosit&agrave;. Chiaro, pratico, senza fronzoli. Ho applicato la regola 50/30/20 dal primo mese e ho gi&agrave; risparmiato il doppio rispetto a prima.</blockquote>
+                <footer class="reviews__card-footer">
+                  <div class="reviews__avatar" aria-hidden="true">MR</div>
+                  <div class="reviews__reviewer">
+                    <span class="reviews__reviewer-name">Marco R.</span>
+                    <span class="reviews__reviewer-detail">Acquisto verificato &middot; Milano</span>
+                  </div>
+                </footer>
+              </article>
+
+              <article class="reviews__card" role="listitem">
+                <div class="reviews__card-top">
+                  <div class="reviews__quote-mark" aria-hidden="true">&ldquo;</div>
+                  <div class="reviews__source-info">
+                    <span class="reviews__card-source reviews__card-source--google">Google</span>
+                    <div class="reviews__card-stars" aria-label="5 stelle su 5"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                  </div>
+                </div>
+                <blockquote class="reviews__text">Ho 28 anni e non avevo mai pensato seriamente ai miei soldi. Questo libro mi ha aperto gli occhi in modo gentile, senza farmi sentire stupida. Il capitolo sul fondo di emergenza mi ha letteralmente cambiato le abitudini.</blockquote>
+                <footer class="reviews__card-footer">
+                  <div class="reviews__avatar reviews__avatar--2" aria-hidden="true">SC</div>
+                  <div class="reviews__reviewer">
+                    <span class="reviews__reviewer-name">Sara C.</span>
+                    <span class="reviews__reviewer-detail">Recensione Google &middot; Roma</span>
+                  </div>
+                </footer>
+              </article>
+
+              <article class="reviews__card" role="listitem">
+                <div class="reviews__card-top">
+                  <div class="reviews__quote-mark" aria-hidden="true">&ldquo;</div>
+                  <div class="reviews__source-info">
+                    <span class="reviews__card-source reviews__card-source--amazon">Amazon</span>
+                    <div class="reviews__card-stars" aria-label="5 stelle su 5"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                  </div>
+                </div>
+                <blockquote class="reviews__text">Letto in un weekend, applicato in una settimana. Il template Excel dei contenuti esclusivi vale gi&agrave; da solo il prezzo del libro. Consigliato a chiunque voglia smettere di arrivare a fine mese con il fiato corto.</blockquote>
+                <footer class="reviews__card-footer">
+                  <div class="reviews__avatar reviews__avatar--3" aria-hidden="true">LB</div>
+                  <div class="reviews__reviewer">
+                    <span class="reviews__reviewer-name">Luca B.</span>
+                    <span class="reviews__reviewer-detail">Acquisto verificato &middot; Torino</span>
+                  </div>
+                </footer>
+              </article>
+
+              <article class="reviews__card" role="listitem">
+                <div class="reviews__card-top">
+                  <div class="reviews__quote-mark" aria-hidden="true">&ldquo;</div>
+                  <div class="reviews__source-info">
+                    <span class="reviews__card-source reviews__card-source--amazon">Amazon</span>
+                    <div class="reviews__card-stars" aria-label="4 stelle su 5"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9734;</span></div>
+                  </div>
+                </div>
+                <blockquote class="reviews__text">Molto pi&ugrave; concreto dei soliti libri americani tradotti. Gli esempi sono italiani, i numeri sono realistici. Avrei voluto pi&ugrave; spazio sugli ETF, ma capisco che sia trattato nel volume successivo.</blockquote>
+                <footer class="reviews__card-footer">
+                  <div class="reviews__avatar reviews__avatar--4" aria-hidden="true">GM</div>
+                  <div class="reviews__reviewer">
+                    <span class="reviews__reviewer-name">Giulia M.</span>
+                    <span class="reviews__reviewer-detail">Acquisto verificato &middot; Napoli</span>
+                  </div>
+                </footer>
+              </article>
+
+              <article class="reviews__card" role="listitem">
+                <div class="reviews__card-top">
+                  <div class="reviews__quote-mark" aria-hidden="true">&ldquo;</div>
+                  <div class="reviews__source-info">
+                    <span class="reviews__card-source reviews__card-source--google">Google</span>
+                    <div class="reviews__card-stars" aria-label="5 stelle su 5"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                  </div>
+                </div>
+                <blockquote class="reviews__text">L'ho regalato a mio figlio di 23 anni che ha appena iniziato a lavorare. &Egrave; il libro che avrei voluto leggere io a quell'et&agrave;. Linguaggio diretto, zero paroloni, consigli applicabili subito.</blockquote>
+                <footer class="reviews__card-footer">
+                  <div class="reviews__avatar reviews__avatar--5" aria-hidden="true">AF</div>
+                  <div class="reviews__reviewer">
+                    <span class="reviews__reviewer-name">Antonio F.</span>
+                    <span class="reviews__reviewer-detail">Recensione Google &middot; Bologna</span>
+                  </div>
+                </footer>
+              </article>
+
+              <article class="reviews__card" role="listitem">
+                <div class="reviews__card-top">
+                  <div class="reviews__quote-mark" aria-hidden="true">&ldquo;</div>
+                  <div class="reviews__source-info">
+                    <span class="reviews__card-source reviews__card-source--amazon">Amazon</span>
+                    <div class="reviews__card-stars" aria-label="5 stelle su 5"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                  </div>
+                </div>
+                <blockquote class="reviews__text">Ho letto decine di libri di finanza personale. Questo &egrave; il primo che non mi ha fatto sentire in colpa, ma mi ha dato strumenti pratici per migliorare. Il portale con i contenuti esclusivi &egrave; un valore aggiunto enorme.</blockquote>
+                <footer class="reviews__card-footer">
+                  <div class="reviews__avatar reviews__avatar--6" aria-hidden="true">EP</div>
+                  <div class="reviews__reviewer">
+                    <span class="reviews__reviewer-name">Elena P.</span>
+                    <span class="reviews__reviewer-detail">Acquisto verificato &middot; Firenze</span>
+                  </div>
+                </footer>
+              </article>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews__controls">
+          <button class="reviews__arrow reviews__arrow--prev" id="reviewsPrev" aria-label="Recensione precedente" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="reviews__dots" id="reviewsDots" role="tablist" aria-label="Recensioni">
+            <button class="reviews__dot reviews__dot--active" role="tab" aria-selected="true"  data-index="0" aria-label="Recensione 1"></button>
+            <button class="reviews__dot"                     role="tab" aria-selected="false" data-index="1" aria-label="Recensione 2"></button>
+            <button class="reviews__dot"                     role="tab" aria-selected="false" data-index="2" aria-label="Recensione 3"></button>
+            <button class="reviews__dot"                     role="tab" aria-selected="false" data-index="3" aria-label="Recensione 4"></button>
+            <button class="reviews__dot"                     role="tab" aria-selected="false" data-index="4" aria-label="Recensione 5"></button>
+            <button class="reviews__dot"                     role="tab" aria-selected="false" data-index="5" aria-label="Recensione 6"></button>
+          </div>
+          <button class="reviews__arrow reviews__arrow--next" id="reviewsNext" aria-label="Recensione successiva">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="reviews__cta-wrap" data-reveal data-reveal-delay="2">
+          <p class="reviews__cta-label">Unisciti a oltre 1.200 lettori che hanno gi&agrave; iniziato</p>
+          <a href="#attiva" class="reviews__cta">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Attiva i tuoi contenuti
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================
+         CHI SIAMO — Fase 6
+    ================================================ -->
+    <section class="about" id="chi-siamo" aria-labelledby="aboutTitle">
+
+      <div class="about__bg" aria-hidden="true">
+        <div class="about__bg-orb about__bg-orb--1"></div>
+        <div class="about__bg-orb about__bg-orb--2"></div>
+        <div class="about__bg-grid"></div>
+      </div>
+
+      <div class="about__inner">
+
+        <div class="about__left" data-reveal>
+          <div class="about__avatar-wrap">
+            <div class="about__avatar" aria-hidden="true">
+              <span class="about__avatar-initials">AV</span>
+              <div class="about__avatar-ring"></div>
+              <div class="about__avatar-ring about__avatar-ring--2"></div>
+            </div>
+            <div class="about__avatar-badge">
+              <svg width="13" height="13" viewBox="0 0 32 36" fill="none" aria-hidden="true"><path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Investitore dal 2014
+            </div>
+          </div>
+          <div class="about__stats">
+            <div class="about__stat">
+              <span class="about__stat-num">10+</span>
+              <span class="about__stat-label">anni di esperienza<br>sul campo</span>
+            </div>
+            <div class="about__stat">
+              <span class="about__stat-num">100%</span>
+              <span class="about__stat-label">autodidatta,<br>realt&agrave; italiana</span>
+            </div>
+            <div class="about__stat">
+              <span class="about__stat-num">0</span>
+              <span class="about__stat-label">titoli accademici<br>in finanza</span>
+            </div>
+          </div>
+          <div class="about__tags" aria-label="Approccio e metodo">
+            <span class="about__tag">Value Investing</span>
+            <span class="about__tag">Analisi Fondamentale</span>
+            <span class="about__tag">Analisi Tecnica</span>
+            <span class="about__tag">Finanza Personale</span>
+            <span class="about__tag">Investitore Retail</span>
+          </div>
+        </div>
+
+        <div class="about__right" data-reveal data-reveal-delay="1">
+          <div class="about__header">
+            <span class="about__eyebrow">Chi sono</span>
+            <h2 class="about__title" id="aboutTitle">
+              Alex Venturini.<br>
+              <em>Un operaio che investe.</em>
+            </h2>
+          </div>
+          <div class="about__body">
+            <p class="about__lead">Non ho una laurea in economia. Non lavoro in banca. Non ho mai gestito fondi altrui. Sono un operaio che, oltre dieci anni fa, ha deciso di smettere di ignorare i propri soldi &mdash; e ha cominciato a studiare.</p>
+            <p>Ho letto centinaia di libri, seguito corsi, analizzato bilanci aziendali nel tempo libero. Ho applicato quello che imparavo direttamente sul mio stipendio, con i miei risparmi reali. Ho fatto errori costosi &mdash; alcuni evitabili, altri no.</p>
+            <p>Nel tempo ho sviluppato un approccio personale ispirato al <strong>value investing</strong>: cerco aziende solide, sottovalutate, con fondamentali chiari. Niente schemi rapidi, niente promesse di rendimenti impossibili.</p>
+            <div class="about__callout">
+              <svg width="18" height="18" viewBox="0 0 32 36" fill="none" aria-hidden="true"><path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Quello che trovi in questa collana non &egrave; teoria copiata dai libri americani. &Egrave; ci&ograve; che ha <strong>funzionato per me</strong> &mdash; nella realt&agrave; concreta di un lavoratore italiano, con uno stipendio normale e tasse italiane.</p>
+            </div>
+            <p>Non mi presento come un esperto. Mi presento come qualcuno che ha percorso la strada prima di te, ha segnato le buche, e ora vuole mostrarti la mappa.</p>
+          </div>
+          <div class="about__signature">
+            <div class="about__signature-line" aria-hidden="true"></div>
+            <span class="about__signature-name">Alex Venturini</span>
+            <span class="about__signature-role">Autore &middot; Investitore Retail &middot; Fortezza Finanziaria</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================================================
+         SEZIONE ATTIVAZIONE — Fase 3
+    ================================================ -->
+    <section class="activate" id="attiva" aria-labelledby="activateTitle">
+
+      <div class="activate__bg" aria-hidden="true">
+        <div class="activate__bg-orb activate__bg-orb--1"></div>
+        <div class="activate__bg-orb activate__bg-orb--2"></div>
+        <div class="activate__bg-grid"></div>
+      </div>
+
+      <div class="activate__inner">
+
+        <div class="activate__card" id="stepRegister" data-reveal>
+
+          <div class="activate__icon" aria-hidden="true">
+            <svg class="activate__lock-svg" width="40" height="40" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path class="activate__lock-shackle" d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <div class="activate__icon-ring" aria-hidden="true"></div>
+          </div>
+
+          <div class="activate__header">
+            <span class="activate__eyebrow">Area Riservata</span>
+            <h2 class="activate__title" id="activateTitle">
+              Attiva il tuo accesso<br>
+              <em>esclusivo</em>
+            </h2>
+            <p class="activate__desc">
+              Inserisci il <strong>Codice di Attivazione</strong> che trovi nell'ultima pagina
+              del tuo libro per sbloccare strumenti, template e contenuti riservati ai lettori.
+            </p>
+          </div>
+
+          <div class="activate__form-wrap">
+            <div class="activate__form" role="form" aria-label="Modulo attivazione libro">
+
+              <div class="activate__field">
+                <label class="activate__label" for="fieldName">Il tuo nome</label>
+                <div class="activate__input-wrap">
+                  <svg class="activate__input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <input type="text" id="fieldName" class="activate__input" placeholder="Mario Rossi" autocomplete="given-name" maxlength="60" aria-required="true" />
+                </div>
+                <span class="activate__field-error" id="errorName" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="activate__field">
+                <label class="activate__label" for="fieldEmail">Email</label>
+                <div class="activate__input-wrap">
+                  <svg class="activate__input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7l10 7 10-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <input type="email" id="fieldEmail" class="activate__input" placeholder="mario@email.it" autocomplete="email" aria-required="true" />
+                </div>
+                <span class="activate__field-error" id="errorEmail" role="alert" aria-live="polite"></span>
+              </div>
+
+              <div class="activate__field">
+                <label class="activate__label" for="fieldCode">
+                  Codice di Attivazione
+                  <span class="activate__label-hint">(ultima pagina del libro)</span>
+                </label>
+                <div class="activate__input-wrap activate__input-wrap--code">
+                  <svg class="activate__input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <input type="text" id="fieldCode" class="activate__input activate__input--code" placeholder="FF-XXXX-XXXX" maxlength="14" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" aria-required="true" aria-describedby="codeHint" />
+                  <span class="activate__code-status" id="codeStatus" aria-live="polite"></span>
+                </div>
+                <span class="activate__field-error" id="errorCode" role="alert" aria-live="polite"></span>
+                <span class="activate__field-hint" id="codeHint">Il codice ha il formato FF-XXXX-XXXX</span>
+              </div>
+
+              <label class="activate__checkbox-wrap" for="fieldPrivacy">
+                <input type="checkbox" id="fieldPrivacy" class="activate__checkbox" aria-required="true" />
+                <span class="activate__checkbox-custom" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="activate__checkbox-label">
+                  Accetto la <a href="#" class="activate__link">Privacy Policy</a> e acconsento a ricevere contenuti esclusivi della collana.
+                </span>
+              </label>
+              <span class="activate__field-error" id="errorPrivacy" role="alert" aria-live="polite"></span>
+
+              <button type="button" id="btnActivate" class="activate__submit" aria-label="Attiva il tuo accesso">
+                <span class="activate__submit-text">Attiva il mio accesso</span>
+                <span class="activate__submit-loader" aria-hidden="true"><span class="activate__spinner"></span></span>
+                <svg class="activate__submit-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+
+            </div>
+          </div>
+
+          <ul class="activate__guarantees" aria-label="Garanzie">
+            <li class="activate__guarantee">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              Accesso sicuro e protetto
+            </li>
+            <li class="activate__guarantee">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Contenuti aggiornati
+            </li>
+            <li class="activate__guarantee">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18L4 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Zero spam, solo valore
+            </li>
+          </ul>
+
+        </div><!-- /#stepRegister -->
+
+
+        <!-- STEP 2: Successo — 6 TOOL SBLOCCATI -->
+        <div class="activate__success" id="stepSuccess" hidden aria-live="polite">
+          <div class="activate__success-burst" aria-hidden="true">
+            <div class="activate__success-ring activate__success-ring--1"></div>
+            <div class="activate__success-ring activate__success-ring--2"></div>
+            <div class="activate__success-ring activate__success-ring--3"></div>
+            <div class="activate__success-check">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path class="activate__success-path" d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <h2 class="activate__success-title">Fortezza sbloccata!</h2>
+          <p class="activate__success-subtitle">
+            Benvenuto, <strong id="successName"></strong>. Il tuo accesso è attivo.
+            Hai sbloccato 6 strumenti interattivi esclusivi.
+          </p>
+
+          <!-- ══ GRIGLIA 6 TOOL ══ -->
+          <div class="activate__unlocked">
+            <h3 class="activate__unlocked-title">I tuoi 6 strumenti sbloccati</h3>
+            <ul class="activate__unlocked-list">
+
+              <li class="activate__unlocked-item">
+                <div class="activate__unlocked-icon">📈</div>
+                <div>
+                  <strong>Simulatore Interesse Composto</strong>
+                  <span>Visualizza la crescita del tuo patrimonio nel tempo</span>
+                </div>
+                <a href="simulatore-int-comp.html" class="activate__unlocked-btn">Apri</a>
+              </li>
+
+              <li class="activate__unlocked-item">
+                <div class="activate__unlocked-icon">📊</div>
+                <div>
+                  <strong>Budget 40-30-20-10</strong>
+                  <span>Dividi lo stipendio secondo la formula del libro</span>
+                </div>
+                <a href="budget.html" class="activate__unlocked-btn">Apri</a>
+              </li>
+
+              <li class="activate__unlocked-item">
+                <div class="activate__unlocked-icon">🛡</div>
+                <div>
+                  <strong>Simulatore Fondo di Emergenza</strong>
+                  <span>Calcola il tuo obiettivo personalizzato della Fortezza</span>
+                </div>
+                <a href="fondo-emergenza.html" class="activate__unlocked-btn">Apri</a>
+              </li>
+
+              <li class="activate__unlocked-item">
+                <div class="activate__unlocked-icon">❄️</div>
+                <div>
+                  <strong>Palla di Neve vs Valanga</strong>
+                  <span>Trova la strategia ottimale per eliminare i debiti</span>
+                </div>
+                <a href="debiti.html" class="activate__unlocked-btn">Apri</a>
+              </li>
+
+              <li class="activate__unlocked-item">
+                <div class="activate__unlocked-icon">⏳</div>
+                <div>
+                  <strong>Costo Opportunità</strong>
+                  <span>Scopri quanto vale davvero ogni acquisto nel futuro</span>
+                </div>
+                <a href="costo-opportunita.html" class="activate__unlocked-btn">Apri</a>
+              </li>
+
+              <li class="activate__unlocked-item">
+                <div class="activate__unlocked-icon">🧮</div>
+                <div>
+                  <strong>Costo per Utilizzo</strong>
+                  <span>Smonta gli acquisti emotivi con la matematica</span>
+                </div>
+                <a href="costo-utilizzo.html" class="activate__unlocked-btn">Apri</a>
+              </li>
+
+            </ul>
+          </div>
+
+          <button type="button" class="activate__reset" id="btnReset">
+            Registra un altro codice
+          </button>
+        </div><!-- /#stepSuccess -->
+
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/script.js" defer></script>
+</body>
+</html>

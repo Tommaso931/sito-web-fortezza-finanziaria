@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interesse Composto — Fortezza Finanziaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    /* ══ DESIGN TOKENS (condivisi con index.html) ══ */
+    :root {
+      --bg-void:        #0a0b0e;
+      --bg-surface:     #10121a;
+      --bg-elevated:    #161923;
+      --gold-light:     #d4a843;
+      --gold:           #b8872e;
+      --gold-dim:       rgba(184,135,46,0.15);
+      --emerald:        #2ecc8b;
+      --emerald-dim:    rgba(46,204,139,0.12);
+      --text-primary:   #e8dfc8;
+      --text-secondary: #9a9080;
+      --text-muted:     #4a4640;
+      --border:         rgba(184,135,46,0.18);
+      --border-hover:   rgba(184,135,46,0.40);
+      --font-display:   'Cormorant Garamond', Georgia, serif;
+      --font-body:      'DM Sans', sans-serif;
+      --ease-out-expo:  cubic-bezier(0.16,1,0.3,1);
+      --duration-fast:  180ms;
+      --duration-base:  300ms;
+      --tools-nav-h:    64px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body {
+      background: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-top: var(--tools-nav-h);
+    }
+
+    /* ════════════════════════════════════════
+       TOOLS NAVBAR — condivisa tra tutti i tool
+    ════════════════════════════════════════ */
+    .tools-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      height: var(--tools-nav-h);
+      background: rgba(10,11,14,0.92);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+    }
+
+    .tools-nav__inner {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      height: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 clamp(1rem, 3vw, 2rem);
+    }
+
+    /* Logo */
+    .tools-nav__logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-shrink: 0;
+      color: var(--gold-light);
+      text-decoration: none;
+      transition: opacity var(--duration-fast) ease;
+    }
+    .tools-nav__logo:hover { opacity: 0.8; }
+    .tools-nav__logo svg { color: var(--gold); filter: drop-shadow(0 0 5px rgba(184,135,46,0.5)); }
+    .tools-nav__logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .tools-nav__logo-main {
+      font-family: var(--font-display);
+      font-size: 1.05rem; font-weight: 700;
+      letter-spacing: 0.04em; color: var(--gold-light);
+    }
+    .tools-nav__logo-sub {
+      font-size: 0.48rem; font-weight: 300;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    /* Separatore verticale */
+    .tools-nav__inner::after {
+      content: '';
+      display: block;
+      width: 1px; height: 28px;
+      background: var(--border);
+      flex-shrink: 0;
+      order: 1;
+    }
+
+    /* Link strumenti */
+    .tools-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 0.15rem;
+      flex: 1;
+      overflow-x: auto;
+      order: 2;
+      scrollbar-width: none;
+    }
+    .tools-nav__links::-webkit-scrollbar { display: none; }
+
+    .tools-nav__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+      flex-shrink: 0;
+    }
+    .tools-nav__link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__link.is-active {
+      background: var(--gold-dim);
+      color: var(--gold-light);
+      border: 1px solid var(--border);
+    }
+    .tools-nav__link-icon { font-size: 0.9rem; }
+    .tools-nav__link-label { }
+
+    /* Bottone homepage */
+    .tools-nav__home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-shrink: 0;
+      order: 3;
+      padding: 0.4rem 0.9rem;
+      background: var(--gold-dim);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--gold-light);
+      text-decoration: none;
+      transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease;
+    }
+    .tools-nav__home-btn:hover { background: rgba(184,135,46,0.25); border-color: var(--border-hover); }
+
+    /* Hamburger mobile */
+    .tools-nav__hamburger {
+      display: none;
+      order: 4;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      width: 36px; height: 36px;
+      border-radius: 6px;
+      background: none; border: 1px solid var(--border);
+      cursor: pointer; flex-shrink: 0;
+      transition: background var(--duration-fast) ease;
+    }
+    .tools-nav__hamburger:hover { background: var(--gold-dim); }
+    .tools-nav__hamburger span {
+      display: block; width: 18px; height: 1.5px;
+      background: var(--text-secondary); border-radius: 2px;
+      transition: transform var(--duration-base) var(--ease-out-expo), opacity var(--duration-fast) ease;
+    }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .tools-nav__hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+    /* Mobile dropdown */
+    .tools-nav__mobile {
+      position: absolute;
+      top: var(--tools-nav-h); left: 0; right: 0;
+      background: rgba(10,11,14,0.97);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      padding: 0.75rem 1rem;
+      display: flex; flex-direction: column; gap: 0.25rem;
+      animation: mobileDropIn 0.25s var(--ease-out-expo) both;
+    }
+    .tools-nav__mobile[hidden] { display: none; }
+
+    @keyframes mobileDropIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .tools-nav__mobile-link {
+      display: block;
+      padding: 0.75rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+    }
+    .tools-nav__mobile-link:hover { background: var(--gold-dim); color: var(--text-primary); }
+    .tools-nav__mobile-link--home {
+      margin-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      color: var(--gold-light);
+    }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE NAVBAR
+    ════════════════════════════════════════ */
+    @media (max-width: 860px) {
+      .tools-nav__links { display: none; }
+      .tools-nav__home-btn { display: none; }
+      .tools-nav__hamburger { display: flex; }
+      .tools-nav__inner::after { display: none; }
+    }
+
+    /* ════════════════════════════════════════
+       SIMULATORE — Layout e stili
+    ════════════════════════════════════════ */
+    .sim {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem clamp(1rem, 3vw, 2rem) 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .sim__header {
+      display: flex; align-items: center; gap: 1rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sim__header-icon {
+      width: 48px; height: 48px;
+      background: var(--gold-dim); border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold-light); flex-shrink: 0;
+    }
+    .sim__eyebrow {
+      font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.25rem;
+    }
+    .sim__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700; line-height: 1.1;
+    }
+    .sim__title em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .sim__grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.5rem; align-items: start;
+    }
+
+    /* ── PANEL ── */
+    .sim__panel {
+      background: rgba(16,18,26,0.85);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.75rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
+      position: sticky; top: calc(var(--tools-nav-h) + 1rem);
+      backdrop-filter: blur(20px);
+    }
+    .sim__panel::before {
+      content: ''; position: absolute;
+      top: -1px; left: 15%; right: 15%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
+      border-radius: 2px;
+    }
+    .sim__panel { position: relative; }
+    .sim__panel-title {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);
+    }
+
+    /* ── FIELD ── */
+    .field { display: flex; flex-direction: column; gap: 0.6rem; }
+    .field__label { display: flex; justify-content: space-between; align-items: baseline; }
+    .field__label-text { font-size: 0.82rem; font-weight: 500; color: var(--text-secondary); }
+    .field__value { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--gold-light); }
+
+    .field__slider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 4px; border-radius: 2px;
+      background: var(--bg-elevated); outline: none; cursor: pointer;
+    }
+    .field__slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      cursor: pointer; box-shadow: 0 2px 8px rgba(184,135,46,0.5);
+      transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+    }
+    .field__slider::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 4px 16px rgba(184,135,46,0.7); }
+    .field__slider::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 50%; border: none;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      cursor: pointer; box-shadow: 0 2px 8px rgba(184,135,46,0.5);
+    }
+    .field__range-labels {
+      display: flex; justify-content: space-between;
+      font-size: 0.65rem; color: var(--text-muted); margin-top: -0.2rem;
+    }
+    .field__presets { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .field__preset {
+      padding: 0.25rem 0.6rem;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 5px;
+      font-size: 0.68rem; font-weight: 500; color: var(--text-muted); cursor: pointer;
+      transition: all var(--duration-fast) ease;
+    }
+    .field__preset:hover, .field__preset.is-active {
+      background: var(--gold-dim); border-color: var(--border-hover); color: var(--gold-light);
+    }
+
+    .sim__divider { height: 1px; background: var(--border); margin: 0 -1.75rem; }
+
+    /* ── RIGHT COLUMN ── */
+    .sim__right { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* ── RESULT CARDS ── */
+    .results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .result-card {
+      background: rgba(16,18,26,0.85); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.25rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+      position: relative; overflow: hidden;
+    }
+    .result-card::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 2px;
+      border-radius: 0 0 14px 14px; opacity: 0.6;
+    }
+    .result-card--total::after    { background: var(--text-primary); }
+    .result-card--versato::after  { background: var(--gold); }
+    .result-card--interessi::after { background: var(--emerald); }
+    .result-card__icon { font-size: 1.1rem; margin-bottom: 0.2rem; }
+    .result-card__label { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .result-card__value {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 2.2vw, 1.8rem); font-weight: 700; line-height: 1;
+    }
+    .result-card--versato .result-card__value   { color: var(--gold-light); }
+    .result-card--interessi .result-card__value  { color: var(--emerald); }
+    .result-card__sub { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* ── MOLTIPLICATORE ── */
+    .multiplier-bar {
+      background: rgba(16,18,26,0.85); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.1rem 1.5rem;
+      display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+    }
+    .multiplier-bar__label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); flex-shrink: 0; }
+    .multiplier-bar__track { flex: 1; height: 8px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; min-width: 80px; }
+    .multiplier-bar__fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--gold), var(--emerald)); width: 0%; transition: width 0.8s var(--ease-out-expo); }
+    .multiplier-bar__value { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--emerald); flex-shrink: 0; min-width: 60px; text-align: right; }
+
+    /* ── GRAFICO ── */
+    .chart-wrap {
+      background: rgba(16,18,26,0.85); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.5rem;
+    }
+    .chart-wrap__header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .chart-wrap__title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
+    .chart-legend { display: flex; gap: 1.25rem; }
+    .chart-legend__item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--text-secondary); }
+    .chart-legend__dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .chart-legend__dot--versato   { background: var(--gold); }
+    .chart-legend__dot--interessi { background: var(--emerald); }
+    .chart-canvas-wrap { position: relative; height: 280px; }
+
+    /* ── COACH BOX ── */
+    .coach-box {
+      background: rgba(184,135,46,0.06); border: 1px solid rgba(184,135,46,0.2);
+      border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0;
+      padding: 1.1rem 1.35rem;
+      display: flex; gap: 0.85rem; align-items: flex-start;
+    }
+    .coach-box__icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .coach-box__text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.75; }
+    .coach-box__text strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ── MILESTONES ── */
+    .milestones {
+      background: rgba(16,18,26,0.85); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.5rem;
+    }
+    .milestones__title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem; }
+    .milestones__list { display: flex; flex-direction: column; gap: 0; list-style: none; }
+    .milestone {
+      display: grid; grid-template-columns: 28px 1fr auto;
+      gap: 0.85rem; align-items: start;
+      padding: 0.9rem 0; border-bottom: 1px solid rgba(184,135,46,0.08);
+    }
+    .milestone:last-child { border-bottom: none; }
+    .milestone__dot-wrap { display: flex; flex-direction: column; align-items: center; padding-top: 4px; }
+    .milestone__dot {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--border); flex-shrink: 0;
+      transition: background var(--duration-base) ease, box-shadow var(--duration-base) ease;
+    }
+    .milestone.is-reached .milestone__dot { background: var(--emerald); box-shadow: 0 0 8px rgba(46,204,139,0.5); }
+    .milestone__year { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+    .milestone.is-reached .milestone__year { color: var(--text-primary); }
+    .milestone__label { font-size: 0.75rem; color: var(--text-muted); }
+    .milestone__value {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      color: var(--text-muted); text-align: right;
+      transition: color var(--duration-base) ease;
+    }
+    .milestone.is-reached .milestone__value { color: var(--gold-light); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sim__grid { grid-template-columns: 1fr; }
+      .sim__panel { position: static; }
+    }
+    @media (max-width: 640px) {
+      .results { grid-template-columns: 1fr; }
+      .chart-canvas-wrap { height: 220px; }
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-void); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOOLS NAVBAR ══ -->
+  <header class="tools-nav" id="toolsNav">
+    <div class="tools-nav__inner">
+
+      <a href="index.html" class="tools-nav__logo" aria-label="Torna alla homepage">
+        <svg width="24" height="28" viewBox="0 0 32 36" fill="none">
+          <path d="M16 1L2 7V18C2 26.284 8.177 33.822 16 35C23.823 33.822 30 26.284 30 18V7L16 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 18L14 22L22 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="tools-nav__logo-text">
+          <span class="tools-nav__logo-main">Fortezza</span>
+          <span class="tools-nav__logo-sub">Finanziaria</span>
+        </span>
+      </a>
+
+      <nav class="tools-nav__links" aria-label="Strumenti">
+        <a href="simulatore-int-comp.html" class="tools-nav__link is-active">
+          <span class="tools-nav__link-icon">📈</span>
+          <span class="tools-nav__link-label">Interesse Composto</span>
+        </a>
+        <a href="budget.html" class="tools-nav__link">
+          <span class="tools-nav__link-icon">📊</span>
+          <span class="tools-nav__link-label">Budget</span>
+        </a>
+        <a href="fondo-emergenza.html" class="tools-nav__link">
+          <span class="tools-nav__link-icon">🛡</span>
+          <span class="tools-nav__link-label">Fondo Emergenza</span>
+        </a>
+        <a href="debiti.html" class="tools-nav__link">
+          <span class="tools-nav__link-icon">❄️</span>
+          <span class="tools-nav__link-label">Debiti</span>
+        </a>
+        <a href="costo-opportunita.html" class="tools-nav__link">
+          <span class="tools-nav__link-icon">⏳</span>
+          <span class="tools-nav__link-label">Costo Opportunità</span>
+        </a>
+        <a href="costo-utilizzo.html" class="tools-nav__link">
+          <span class="tools-nav__link-icon">🧮</span>
+          <span class="tools-nav__link-label">Costo Utilizzo</span>
+        </a>
+      </nav>
+
+      <a href="index.html" class="tools-nav__home-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 22V12h6v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Homepage
+      </a>
+
+      <button class="tools-nav__hamburger" id="toolsHamburger" aria-label="Menu strumenti" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="tools-nav__mobile" id="toolsMobile" hidden>
+      <a href="simulatore-int-comp.html" class="tools-nav__mobile-link">📈 Interesse Composto</a>
+      <a href="budget.html"             class="tools-nav__mobile-link">📊 Budget 40-30-20-10</a>
+      <a href="fondo-emergenza.html"    class="tools-nav__mobile-link">🛡 Fondo di Emergenza</a>
+      <a href="debiti.html"             class="tools-nav__mobile-link">❄️ Palla di Neve vs Valanga</a>
+      <a href="costo-opportunita.html"  class="tools-nav__mobile-link">⏳ Costo Opportunità</a>
+      <a href="costo-utilizzo.html"     class="tools-nav__mobile-link">🧮 Costo per Utilizzo</a>
+      <a href="index.html"                   class="tools-nav__mobile-link tools-nav__mobile-link--home">🏠 Torna alla Homepage</a>
+    </div>
+  </header>
+
+  <!-- ══ SIMULATORE ══ -->
+  <div class="sim">
+
+    <div class="sim__header">
+      <div class="sim__header-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 17l4-8 4 4 4-6 4 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="19" cy="5" r="2" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div>
+        <p class="sim__eyebrow">Strumento 01 · Fortezza Finanziaria</p>
+        <h1 class="sim__title">Simulatore <em>Interesse Composto</em></h1>
+      </div>
+    </div>
+
+    <div class="sim__grid">
+
+      <!-- PANNELLO INPUTS -->
+      <aside class="sim__panel">
+        <p class="sim__panel-title">Parametri</p>
+
+        <div class="field">
+          <div class="field__label">
+            <span class="field__label-text">Capitale Iniziale</span>
+            <span class="field__value" id="valCapitale">€ 5.000</span>
+          </div>
+          <input type="range" class="field__slider" id="sliderCapitale" min="0" max="100000" step="500" value="5000" />
+          <div class="field__range-labels"><span>€ 0</span><span>€ 100.000</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field__label">
+            <span class="field__label-text">Contributo Mensile</span>
+            <span class="field__value" id="valMensile">€ 200</span>
+          </div>
+          <input type="range" class="field__slider" id="sliderMensile" min="0" max="2000" step="25" value="200" />
+          <div class="field__range-labels"><span>€ 0</span><span>€ 2.000</span></div>
+        </div>
+
+        <div class="sim__divider"></div>
+
+        <div class="field">
+          <div class="field__label">
+            <span class="field__label-text">Orizzonte Temporale</span>
+            <span class="field__value" id="valAnni">20 anni</span>
+          </div>
+          <input type="range" class="field__slider" id="sliderAnni" min="1" max="40" step="1" value="20" />
+          <div class="field__range-labels"><span>1 anno</span><span>40 anni</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field__label">
+            <span class="field__label-text">Tasso Annuo</span>
+            <span class="field__value" id="valTasso">7%</span>
+          </div>
+          <input type="range" class="field__slider" id="sliderTasso" min="1" max="15" step="0.5" value="7" />
+          <div class="field__range-labels"><span>1%</span><span>15%</span></div>
+          <div class="field__presets" id="presetWrap">
+            <button class="field__preset" data-rate="3">3% — Stalla</button>
+            <button class="field__preset is-active" data-rate="7">7% — S&P 500</button>
+            <button class="field__preset" data-rate="10">10% — Bull</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- COLONNA DESTRA -->
+      <div class="sim__right">
+
+        <div class="results">
+          <div class="result-card result-card--total">
+            <div class="result-card__icon">💰</div>
+            <div class="result-card__label">Valore Finale</div>
+            <div class="result-card__value" id="resFinale">—</div>
+            <div class="result-card__sub">tra <span id="resAnniLabel">20</span> anni</div>
+          </div>
+          <div class="result-card result-card--versato">
+            <div class="result-card__icon">📥</div>
+            <div class="result-card__label">Capitale Versato</div>
+            <div class="result-card__value" id="resVersato">—</div>
+            <div class="result-card__sub">il tuo contributo</div>
+          </div>
+          <div class="result-card result-card--interessi">
+            <div class="result-card__icon">📈</div>
+            <div class="result-card__label">Interessi Guadagnati</div>
+            <div class="result-card__value" id="resInteressi">—</div>
+            <div class="result-card__sub">generati dal mercato</div>
+          </div>
+        </div>
+
+        <div class="multiplier-bar">
+          <span class="multiplier-bar__label">Il mercato moltiplica il tuo capitale per</span>
+          <div class="multiplier-bar__track">
+            <div class="multiplier-bar__fill" id="multFill"></div>
+          </div>
+          <div class="multiplier-bar__value" id="multValue">—</div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-wrap__header">
+            <div class="chart-wrap__title">Crescita del patrimonio nel tempo</div>
+            <div class="chart-legend">
+              <div class="chart-legend__item">
+                <div class="chart-legend__dot chart-legend__dot--versato"></div>
+                Capitale versato
+              </div>
+              <div class="chart-legend__item">
+                <div class="chart-legend__dot chart-legend__dot--interessi"></div>
+                Interessi
+              </div>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chartCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="coach-box">
+          <div class="coach-box__icon">🛡</div>
+          <div class="coach-box__text" id="coachText">Imposta i parametri per vedere la tua proiezione.</div>
+        </div>
+
+        <div class="milestones">
+          <div class="milestones__title">Tappe principali</div>
+          <ul class="milestones__list" id="milestonesList"></ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+  'use strict';
+
+  /* ── NAVBAR MOBILE ── */
+  (function() {
+    const btn    = document.getElementById('toolsHamburger');
+    const menu   = document.getElementById('toolsMobile');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      open ? menu.setAttribute('hidden','') : menu.removeAttribute('hidden');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { btn.setAttribute('aria-expanded','false'); menu.setAttribute('hidden',''); }
+    });
+  })();
+
+  /* ── FORMATTATORI ── */
+  const fmt  = n => n.toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  const fmtX = n => n.toFixed(1) + 'x';
+
+  /* ── DOM ── */
+  const slCapitale = document.getElementById('sliderCapitale');
+  const slMensile  = document.getElementById('sliderMensile');
+  const slAnni     = document.getElementById('sliderAnni');
+  const slTasso    = document.getElementById('sliderTasso');
+  const valCapitale = document.getElementById('valCapitale');
+  const valMensile  = document.getElementById('valMensile');
+  const valAnni     = document.getElementById('valAnni');
+  const valTasso    = document.getElementById('valTasso');
+  const resFinale    = document.getElementById('resFinale');
+  const resVersato   = document.getElementById('resVersato');
+  const resInteressi = document.getElementById('resInteressi');
+  const resAnniLabel = document.getElementById('resAnniLabel');
+  const multFill     = document.getElementById('multFill');
+  const multValue    = document.getElementById('multValue');
+  const coachText    = document.getElementById('coachText');
+  const milestonesList = document.getElementById('milestonesList');
+
+  let chart = null;
+
+  /* ── GRAFICO ── */
+  function buildChart(labels, dataVersato, dataInteressi) {
+    const ctx = document.getElementById('chartCanvas').getContext('2d');
+    const goldGrad = ctx.createLinearGradient(0,0,0,280);
+    goldGrad.addColorStop(0,'rgba(184,135,46,0.55)');
+    goldGrad.addColorStop(1,'rgba(184,135,46,0.02)');
+    const emeraldGrad = ctx.createLinearGradient(0,0,0,280);
+    emeraldGrad.addColorStop(0,'rgba(46,204,139,0.45)');
+    emeraldGrad.addColorStop(1,'rgba(46,204,139,0.02)');
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label:'Capitale versato', data:dataVersato, borderColor:'#b8872e', backgroundColor:goldGrad, borderWidth:2, fill:true, tension:0.4, pointRadius:0, pointHoverRadius:5, pointHoverBackgroundColor:'#d4a843' },
+          { label:'Interessi guadagnati', data:dataInteressi, borderColor:'#2ecc8b', backgroundColor:emeraldGrad, borderWidth:2, fill:'-1', tension:0.4, pointRadius:0, pointHoverRadius:5, pointHoverBackgroundColor:'#2ecc8b' },
+        ],
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins: {
+          legend:{ display:false },
+          tooltip:{
+            backgroundColor:'rgba(16,18,26,0.97)', borderColor:'rgba(184,135,46,0.3)', borderWidth:1,
+            titleColor:'#9a9080', bodyColor:'#e8dfc8', padding:12,
+            callbacks:{
+              title: items => `Anno ${items[0].label}`,
+              label: item  => ` ${item.dataset.label}: ${fmt(item.raw)}`,
+              afterBody: items => [``, ` Totale: ${fmt(items[0].raw + items[1].raw)}`],
+            },
+          },
+        },
+        scales:{
+          x:{ grid:{color:'rgba(184,135,46,0.06)'}, ticks:{color:'#4a4640',font:{family:"'DM Sans'",size:11},maxTicksLimit:10,callback:v=>`${v}a`}, border:{color:'rgba(184,135,46,0.1)'} },
+          y:{ grid:{color:'rgba(184,135,46,0.06)'}, ticks:{color:'#4a4640',font:{family:"'DM Sans'",size:11},callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'k':v}, border:{color:'rgba(184,135,46,0.1)'} },
+        },
+      },
+    });
+  }
+
+  /* ── CALCOLO ── */
+  function compute() {
+    const P   = parseFloat(slCapitale.value);
+    const PMT = parseFloat(slMensile.value);
+    const N   = parseInt(slAnni.value);
+    const R   = parseFloat(slTasso.value) / 100;
+    const r   = R / 12;
+
+    valCapitale.textContent = fmt(P);
+    valMensile.textContent  = fmt(PMT);
+    valAnni.textContent     = `${N} ${N===1?'anno':'anni'}`;
+    valTasso.textContent    = `${parseFloat(slTasso.value)}%`;
+    resAnniLabel.textContent = N;
+
+    const labels = [], dataVersato = [], dataInteressi = [];
+    for (let anno = 0; anno <= N; anno++) {
+      const mesi  = anno * 12;
+      const fvP   = P * Math.pow(1+r, mesi);
+      const fvPMT = r > 0 ? PMT * ((Math.pow(1+r,mesi)-1)/r) : PMT * mesi;
+      const totale   = fvP + fvPMT;
+      const versato  = P + PMT * mesi;
+      labels.push(anno);
+      dataVersato.push(Math.round(versato));
+      dataInteressi.push(Math.round(Math.max(0, totale - versato)));
+    }
+
+    const totFinale  = dataVersato[N] + dataInteressi[N];
+    const versFinale = dataVersato[N];
+    const intFinale  = dataInteressi[N];
+    const molt       = versFinale > 0 ? totFinale / versFinale : 1;
+
+    animateValue(resFinale,    totFinale,  fmt);
+    animateValue(resVersato,   versFinale, fmt);
+    animateValue(resInteressi, intFinale,  fmt);
+
+    multFill.style.width = Math.min((molt-1)/9,1)*100 + '%';
+    multValue.textContent = fmtX(molt);
+
+    buildChart(labels, dataVersato, dataInteressi);
+    renderMilestones(labels, dataVersato, dataInteressi, N);
+    updateCoach(P, PMT, N, R, totFinale, versFinale, intFinale, molt);
+  }
+
+  /* ── ANIMAZIONE NUMERO ── */
+  function animateValue(el, target, formatter) {
+    const dur = 600, start = performance.now();
+    function step(ts) {
+      const p = Math.min((ts-start)/dur,1);
+      const e = 1 - Math.pow(1-p,3);
+      el.textContent = formatter(Math.round(e*target));
+      if (p<1) requestAnimationFrame(step);
+      else el.textContent = formatter(target);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ── MILESTONES ── */
+  function renderMilestones(labels, dataVersato, dataInteressi, N) {
+    const YEARS = [1,5,10,20,30,40].filter(y=>y<=N);
+    if (!YEARS.includes(N) && N>0) YEARS.push(N);
+    YEARS.sort((a,b)=>a-b);
+    milestonesList.innerHTML = '';
+    YEARS.forEach(y => {
+      const tot = dataVersato[y] + dataInteressi[y];
+      const li = document.createElement('li');
+      li.className = 'milestone is-reached';
+      li.innerHTML = `<div class="milestone__dot-wrap"><div class="milestone__dot"></div></div><div><div class="milestone__year">Anno ${y}</div><div class="milestone__label">${fmt(dataVersato[y])} versato</div></div><div class="milestone__value">${fmt(tot)}</div>`;
+      milestonesList.appendChild(li);
+    });
+  }
+
+  /* ── COACH ── */
+  function updateCoach(P, PMT, N, R, totFinale, versFinale, intFinale, molt) {
+    const pct = versFinale > 0 ? (intFinale/totFinale*100).toFixed(0) : 0;
+    let msg = '';
+    if (N < 5) {
+      msg = `Con un orizzonte di soli <strong>${N} ${N===1?'anno':'anni'}</strong>, l'interesse composto ha poco tempo per lavorare. I veri guadagni iniziano dopo l'anno 10.`;
+    } else if (R <= 0.03) {
+      msg = `Un tasso del ${(R*100).toFixed(1)}% corrisponde a un conto deposito o BTP — <strong>La Stalla</strong>. Sicuro, ma il ${pct}% del tuo patrimonio finale sarà capitale versato. Investire in ETF azionari potrebbe cambiare radicalmente la proporzione.`;
+    } else if (molt >= 5) {
+      msg = `Straordinario: il mercato moltiplica il tuo capitale per <strong>${molt.toFixed(1)}x</strong>. Ben il <strong>${pct}% (${fmt(intFinale)})</strong> del patrimonio finale è denaro che non hai mai versato — l'ha generato il tempo.`;
+    } else if (intFinale > versFinale) {
+      msg = `Punto di svolta raggiunto: gli interessi <strong>superano il capitale versato</strong>. Il ${pct}% del tuo patrimonio finale è generato dal mercato, non dal tuo lavoro.`;
+    } else if (PMT === 0 && P === 0) {
+      msg = `Imposta un capitale iniziale o un contributo mensile per vedere la magia dell'interesse composto.`;
+    } else {
+      msg = `Hai versato in totale <strong>${fmt(versFinale)}</strong>. Il mercato ci ha aggiunto <strong>${fmt(intFinale)}</strong> — il <strong>${pct}%</strong> del tuo patrimonio finale.`;
+    }
+    coachText.innerHTML = msg;
+  }
+
+  /* ── SLIDER TRACK FILL ── */
+  function updateSlider(sl) {
+    const pct = ((parseFloat(sl.value)-parseFloat(sl.min))/(parseFloat(sl.max)-parseFloat(sl.min)))*100;
+    sl.style.background = `linear-gradient(to right, var(--gold) ${pct}%, var(--bg-elevated) ${pct}%)`;
+  }
+  function initSlider(sl) {
+    updateSlider(sl);
+    sl.addEventListener('input', () => { updateSlider(sl); compute(); });
+  }
+
+  /* ── PRESET ── */
+  document.querySelectorAll('.field__preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.field__preset').forEach(b=>b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      slTasso.value = btn.dataset.rate;
+      updateSlider(slTasso); compute();
+    });
+  });
+  slTasso.addEventListener('input', () => {
+    document.querySelectorAll('.field__preset').forEach(b => {
+      b.classList.toggle('is-active', parseFloat(b.dataset.rate) === parseFloat(slTasso.value));
+    });
+  });
+
+  /* ── INIT ── */
+  [slCapitale, slMensile, slAnni, slTasso].forEach(initSlider);
+  compute();
+  </script>
+</body>
+</html>

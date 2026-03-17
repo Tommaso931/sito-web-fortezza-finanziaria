@@ -1,0 +1,3014 @@
+/* ================================================
+   FORTEZZA FINANZIARIA — style.css
+   Fase 1: Reset + Token + Navbar
+   ================================================ */
+
+
+/* ------------------------------------------------
+   1. CSS CUSTOM PROPERTIES (Design Tokens)
+   ------------------------------------------------ */
+:root {
+  /* Palette */
+  --bg-void:        #0a0b0e;       /* sfondo profondo */
+  --bg-surface:     #10121a;       /* card, drawer */
+  --bg-elevated:    #161923;       /* hover state */
+
+  --gold-light:     #d4a843;       /* oro chiaro, testo */
+  --gold:           #b8872e;       /* oro principale */
+  --gold-dim:       rgba(184, 135, 46, 0.15);   /* glow/fill */
+  --emerald:        #2ecc8b;       /* accento verde smeraldo */
+  --emerald-dim:    rgba(46, 204, 139, 0.12);
+
+  --text-primary:   #e8dfc8;       /* testo principale — panna calda */
+  --text-secondary: #9a9080;       /* testo secondario */
+  --text-muted:     #4a4640;       /* placeholder */
+
+  --border:         rgba(184, 135, 46, 0.18);   /* bordi sottili */
+  --border-hover:   rgba(184, 135, 46, 0.40);
+
+  /* Tipografia */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Spacing */
+  --nav-height:  72px;
+  --gutter:      clamp(1.25rem, 4vw, 2.5rem);
+
+  /* Timing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 180ms;
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
+}
+
+
+/* ------------------------------------------------
+   2. RESET & BASE
+   ------------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Focus ring accessibile */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+
+/* ------------------------------------------------
+   3. SCROLLBAR personalizzata (Chrome/Edge)
+   ------------------------------------------------ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+
+/* ------------------------------------------------
+   4. NAVBAR — Struttura fissa
+   ------------------------------------------------ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  height: var(--nav-height);
+
+  /* Trasparente di default, opacizza allo scroll via JS */
+  background: transparent;
+  transition:
+    background var(--duration-base) var(--ease-in-out),
+    box-shadow  var(--duration-base) var(--ease-in-out),
+    backdrop-filter var(--duration-base) var(--ease-in-out);
+}
+
+/* Stato "scrollato" aggiunto da script.js */
+.navbar.is-scrolled {
+  background: rgba(10, 11, 14, 0.88);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 1px 0 var(--border), 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* Linea decorativa oro sotto la navbar quando scrollata */
+.navbar.is-scrolled::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--gold) 30%,
+    var(--gold) 70%,
+    transparent
+  );
+  opacity: 0.35;
+}
+
+
+/* ------------------------------------------------
+   5. NAVBAR — Inner layout
+   ------------------------------------------------ */
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  gap: 1.5rem;
+}
+
+
+/* ------------------------------------------------
+   6. LOGO
+   ------------------------------------------------ */
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  color: var(--gold-light);
+  transition: opacity var(--duration-fast) ease;
+}
+
+.navbar__logo:hover { opacity: 0.82; }
+
+.navbar__logo-icon {
+  color: var(--gold);
+  /* leggero pulse quando la pagina è in cima */
+  animation: shieldPulse 4s ease-in-out infinite;
+}
+
+@keyframes shieldPulse {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(184,135,46,0.4)); }
+  50%       { filter: drop-shadow(0 0 10px rgba(184,135,46,0.9)); }
+}
+
+.navbar__logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.navbar__logo-main {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--gold-light);
+}
+
+.navbar__logo-sub {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+
+/* ------------------------------------------------
+   7. DESKTOP NAV LINKS
+   ------------------------------------------------ */
+.navbar__nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navbar__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  transition:
+    color var(--duration-fast) ease,
+    background var(--duration-fast) ease;
+}
+
+.navbar__link:hover {
+  color: var(--text-primary);
+  background: var(--gold-dim);
+}
+
+/* Underline animato */
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0.85rem;
+  right: 0.85rem;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out-expo);
+}
+
+.navbar__link:hover::after,
+.navbar__link.is-active::after {
+  transform: scaleX(1);
+}
+
+.navbar__link.is-active {
+  color: var(--gold-light);
+}
+
+
+/* ------------------------------------------------
+   8. CTA BUTTON — "Attiva il tuo Libro"
+   ------------------------------------------------ */
+.navbar__cta {
+  --cta-padding-v: 0.55rem;
+  --cta-padding-h: 1.1rem;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+
+  padding: var(--cta-padding-v) var(--cta-padding-h);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  color: var(--bg-void);
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  border: 1px solid transparent;
+  border-radius: 6px;
+
+  /* Shimmer overlay */
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+
+  box-shadow:
+    0 2px 12px rgba(184, 135, 46, 0.35),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+
+  transition:
+    transform       var(--duration-fast) ease,
+    box-shadow      var(--duration-fast) ease,
+    background-position var(--duration-slow) ease;
+  cursor: pointer;
+}
+
+.navbar__cta:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 20px rgba(184, 135, 46, 0.55),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  background-position: 100% 0%;
+}
+
+.navbar__cta:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(184, 135, 46, 0.3);
+}
+
+.navbar__cta-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Variante mobile (nel drawer) */
+.navbar__cta--mobile {
+  width: 100%;
+  justify-content: center;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.875rem;
+  border-radius: 8px;
+}
+
+
+/* ------------------------------------------------
+   9. HAMBURGER (mobile trigger)
+   ------------------------------------------------ */
+.navbar__hamburger {
+  display: none;          /* visibile solo su mobile via media query */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 4px;
+  border-radius: 8px;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  transition: background var(--duration-fast) ease;
+}
+
+.navbar__hamburger:hover {
+  background: var(--gold-dim);
+}
+
+.navbar__hamburger-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transform-origin: center;
+  transition:
+    transform  var(--duration-base) var(--ease-out-expo),
+    opacity    var(--duration-fast) ease,
+    width      var(--duration-base) var(--ease-out-expo);
+}
+
+/* Stato aperto: le barre si trasformano in ✕ */
+.navbar__hamburger[aria-expanded="true"] .navbar__hamburger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.navbar__hamburger[aria-expanded="true"] .navbar__hamburger-bar:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+.navbar__hamburger[aria-expanded="true"] .navbar__hamburger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+/* ------------------------------------------------
+   10. MOBILE DRAWER
+   ------------------------------------------------ */
+.navbar__mobile {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 800;
+
+  background: rgba(10, 11, 14, 0.97);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+
+  display: flex;
+  flex-direction: column;
+  padding: 2rem var(--gutter);
+  gap: 2rem;
+  border-top: 1px solid var(--border);
+
+  /* Animazione entrata */
+  animation: drawerSlideIn var(--duration-base) var(--ease-out-expo) both;
+}
+
+/* Nasconde l'attributo [hidden] ma mantiene l'animazione */
+.navbar__mobile[hidden] {
+  display: none;
+}
+
+@keyframes drawerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar__mobile-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navbar__mobile-link {
+  display: block;
+  padding: 1rem 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  transition:
+    color       var(--duration-fast) ease,
+    padding-left var(--duration-fast) ease;
+}
+
+.navbar__mobile-link:last-child {
+  border-bottom: none;
+}
+
+.navbar__mobile-link:hover {
+  color: var(--gold-light);
+  padding-left: 1.25rem;
+}
+
+
+/* ------------------------------------------------
+   11. RESPONSIVE BREAKPOINTS
+   ------------------------------------------------ */
+
+/* Tablet: nasconde il testo logo-sub per compattare */
+@media (max-width: 900px) {
+  .navbar__logo-sub {
+    display: none;
+  }
+}
+
+/* Mobile: collapse della nav desktop, mostra hamburger */
+@media (max-width: 768px) {
+  .navbar__nav {
+    display: none;
+  }
+
+  .navbar__cta:not(.navbar__cta--mobile) {
+    display: none;
+  }
+
+  .navbar__hamburger {
+    display: flex;
+  }
+}
+
+/* Su schermi molto piccoli (<380px) rimpicciolisce logo */
+@media (max-width: 380px) {
+  .navbar__logo-main {
+    font-size: 1.05rem;
+  }
+  .navbar__logo-icon svg {
+    width: 26px;
+    height: 30px;
+  }
+}
+/* ================================================
+   FASE 2 — HERO SECTION
+   ================================================ */
+
+
+/* ------------------------------------------------
+   H1. HERO — Layout principale
+   ------------------------------------------------ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: var(--nav-height);
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(3rem, 6vw, 6rem);
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: clamp(4rem, 8vh, 7rem) var(--gutter);
+}
+
+
+/* ------------------------------------------------
+   H2. HERO — Background layers
+   ------------------------------------------------ */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Griglia prospettica SVG generata via CSS */
+.hero__bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 20%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 20%, transparent 100%);
+  opacity: 0.5;
+}
+
+/* Orb oro — in alto a sinistra */
+.hero__bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0;
+  animation: orbFadeIn 1.4s var(--ease-out-expo) forwards;
+}
+
+.hero__bg-orb--gold {
+  width: clamp(400px, 50vw, 700px);
+  height: clamp(400px, 50vw, 700px);
+  top: -15%;
+  left: -10%;
+  background: radial-gradient(circle, rgba(184,135,46,0.22) 0%, transparent 70%);
+  animation-delay: 0.3s;
+}
+
+.hero__bg-orb--emerald {
+  width: clamp(300px, 40vw, 550px);
+  height: clamp(300px, 40vw, 550px);
+  bottom: -10%;
+  right: 5%;
+  background: radial-gradient(circle, rgba(46,204,139,0.12) 0%, transparent 70%);
+  animation-delay: 0.6s;
+}
+
+@keyframes orbFadeIn {
+  to { opacity: 1; }
+}
+
+/* Noise texture overlay per profondità */
+.hero__bg-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+}
+
+
+/* ------------------------------------------------
+   H3. HERO — Contenuto testuale
+   ------------------------------------------------ */
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Badge collana */
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: var(--gold-dim);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  width: fit-content;
+}
+
+.hero__badge-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--emerald);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* Headline */
+.hero__headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.hero__headline em {
+  font-style: italic;
+  color: var(--gold-light);
+  /* Gradiente testo oro */
+  background: linear-gradient(135deg, var(--gold-light) 0%, #f0c96a 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Sottotitolo */
+.hero__subtitle {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 50ch;
+}
+
+.hero__subtitle strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Pillole feature */
+.hero__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.hero__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.hero__pill:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.hero__pill svg {
+  color: var(--emerald);
+  flex-shrink: 0;
+}
+
+/* CTA row */
+.hero__cta-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero__cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.6rem;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--bg-void);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(184,135,46,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+
+.hero__cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(184,135,46,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.hero__cta-primary:active { transform: translateY(0); }
+
+.hero__cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition:
+    color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    gap var(--duration-fast) ease;
+}
+
+.hero__cta-secondary:hover {
+  color: var(--gold-light);
+  border-color: var(--border-hover);
+  gap: 0.65rem;
+}
+
+/* Proof bar */
+.hero__proof {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.hero__proof-num {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  min-width: 3ch;
+}
+
+
+/* ------------------------------------------------
+   H4. HERO — Animazioni di rivelazione
+   ------------------------------------------------ */
+
+/* Stato iniziale: tutti gli elementi con data-reveal partono nascosti */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity   var(--duration-slow) var(--ease-out-expo),
+    transform var(--duration-slow) var(--ease-out-expo);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Delay sequenziali tramite attributo data-reveal-delay */
+[data-reveal-delay="1"] { transition-delay: 0.1s; }
+[data-reveal-delay="2"] { transition-delay: 0.22s; }
+[data-reveal-delay="3"] { transition-delay: 0.36s; }
+[data-reveal-delay="4"] { transition-delay: 0.5s; }
+[data-reveal-delay="5"] { transition-delay: 0.65s; }
+
+
+/* ------------------------------------------------
+   H5. HERO — Book 3D Mockup
+   ------------------------------------------------ */
+.hero__visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__book-scene {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 420px;
+  /* Fluttuazione continua */
+  animation: bookFloat 6s ease-in-out infinite;
+}
+
+@keyframes bookFloat {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50%       { transform: translateY(-16px) rotate(1deg); }
+}
+
+/* Alone luminoso */
+.hero__book-glow {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(184,135,46,0.35) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(40px);
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+  50%       { opacity: 1; transform: translateX(-50%) scale(1.15); }
+}
+
+/* Contenitore 3D */
+.hero__book {
+  position: relative;
+  width: 200px;
+  height: 290px;
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateY(-28deg) rotateX(4deg);
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.hero__book:hover {
+  transform: perspective(900px) rotateY(-10deg) rotateX(2deg);
+}
+
+/* Facce del libro */
+.hero__book-face {
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+/* Copertina (front) */
+.hero__book-front {
+  width: 200px;
+  height: 290px;
+  top: 0;
+  left: 0;
+  transform: translateZ(16px);
+  border-radius: 3px 6px 6px 3px;
+  overflow: hidden;
+  box-shadow:
+    8px 12px 40px rgba(0,0,0,0.6),
+    2px 2px 0 rgba(255,255,255,0.04) inset;
+}
+
+.hero__book-cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, #0f1420 0%, #080c18 50%, #060810 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.2rem 1rem;
+  border: 1px solid rgba(184,135,46,0.25);
+  border-right: none;
+  overflow: hidden;
+}
+
+/* Decori geometrici copertina */
+.hero__book-cover::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+.hero__book-cover::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(184,135,46,0.12);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.hero__book-cover-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.hero__book-series {
+  font-family: var(--font-body);
+  font-size: 0.52rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hero__book-vol {
+  font-family: var(--font-body);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.hero__book-cover-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  color: var(--gold-light);
+}
+
+.hero__book-cover-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero__book-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.hero__book-author {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Riflesso lucido copertina */
+.hero__book-shine {
+  position: absolute;
+  top: 0; left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(105deg, rgba(255,255,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Dorso (spine) */
+.hero__book-spine {
+  width: 32px;
+  height: 290px;
+  top: 0;
+  left: -32px;
+  transform: rotateY(-90deg) translateZ(16px);
+  background: linear-gradient(180deg, #1a1208 0%, #0d0a04 100%);
+  border-left: 1px solid rgba(184,135,46,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero__book-spine-text {
+  font-family: var(--font-body);
+  font-size: 0.45rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  white-space: nowrap;
+}
+
+/* Retro */
+.hero__book-back {
+  width: 200px;
+  height: 290px;
+  top: 0;
+  left: 0;
+  transform: rotateY(180deg) translateZ(16px);
+  background: #080a10;
+  border-radius: 6px 3px 3px 6px;
+}
+
+/* Top e bottom del libro */
+.hero__book-top {
+  width: 200px;
+  height: 32px;
+  top: -32px;
+  left: 0;
+  transform: rotateX(90deg) translateZ(0);
+  background: linear-gradient(90deg, #1a1208, #0d0a04);
+}
+
+.hero__book-bottom {
+  width: 200px;
+  height: 32px;
+  bottom: -32px;
+  left: 0;
+  transform: rotateX(-90deg) translateZ(0);
+  background: linear-gradient(90deg, #1a1208, #0d0a04);
+}
+
+/* Pagine visibili sul lato destro */
+.hero__book-pages {
+  position: absolute;
+  top: 2px;
+  right: -10px;
+  width: 14px;
+  height: 286px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #e8dfc8 0px, #e8dfc8 1px,
+    #c8b88a 1px, #c8b88a 2px
+  );
+  border-radius: 0 2px 2px 0;
+  transform: translateZ(0);
+  box-shadow: 2px 0 8px rgba(0,0,0,0.4);
+}
+
+
+/* ------------------------------------------------
+   H6. HERO — Floating badges intorno al libro
+   ------------------------------------------------ */
+.hero__badge-float {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.8rem;
+  background: rgba(16, 18, 26, 0.92);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+
+.hero__badge-float small {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.hero__badge-float-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Posizioni specifiche (relative al .hero__book-scene) */
+.hero__badge-float--1 {
+  top: 5%;
+  right: -10%;
+  animation: badgeFloat1 5s ease-in-out infinite;
+}
+.hero__badge-float--2 {
+  bottom: 20%;
+  left: -12%;
+  animation: badgeFloat2 6s ease-in-out infinite;
+}
+.hero__badge-float--3 {
+  bottom: 5%;
+  right: 0%;
+  animation: badgeFloat3 4.5s ease-in-out infinite;
+}
+
+@keyframes badgeFloat1 {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes badgeFloat2 {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(6px); }
+}
+@keyframes badgeFloat3 {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+
+/* ------------------------------------------------
+   H7. HERO — Scroll indicator
+   ------------------------------------------------ */
+.hero__scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  animation: fadeInUp 1s var(--ease-out-expo) 1.2s both;
+}
+
+.hero__scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--gold));
+  animation: scrollLine 2s ease-in-out infinite;
+  transform-origin: top;
+}
+
+@keyframes scrollLine {
+  0%   { transform: scaleY(0); opacity: 0; }
+  40%  { opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+
+/* ------------------------------------------------
+   H8. HERO — Responsive
+   ------------------------------------------------ */
+@media (max-width: 1024px) {
+  .hero__book-scene {
+    width: 280px;
+    height: 380px;
+  }
+  .hero__book {
+    width: 170px;
+    height: 250px;
+  }
+  .hero__book-front { width: 170px; height: 250px; }
+  .hero__book-spine  { height: 250px; }
+  .hero__book-back   { width: 170px; height: 250px; }
+  .hero__book-top    { width: 170px; }
+  .hero__book-bottom { width: 170px; }
+  .hero__book-pages  { height: 246px; right: -8px; width: 12px; }
+}
+
+@media (max-width: 860px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 3.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .hero__content {
+    align-items: center;
+  }
+
+  .hero__subtitle { max-width: 60ch; }
+  .hero__pills    { justify-content: center; }
+  .hero__cta-row  { justify-content: center; }
+  .hero__proof    { justify-content: center; }
+
+  .hero__visual {
+    order: -1; /* libro sopra il testo su mobile */
+  }
+
+  .hero__book-scene {
+    width: 240px;
+    height: 320px;
+  }
+
+  .hero__badge-float--1 { right: -5%; }
+  .hero__badge-float--2 { left: -5%; }
+}
+
+@media (max-width: 480px) {
+  .hero__headline {
+    font-size: clamp(2.2rem, 9vw, 3rem);
+  }
+  .hero__badge-float {
+    font-size: 0.62rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+/* ================================================
+   FASE 3 — SEZIONE ATTIVAZIONE
+   ================================================ */
+
+
+/* ------------------------------------------------
+   A1. SEZIONE — Layout e sfondo
+   ------------------------------------------------ */
+.activate {
+  position: relative;
+  padding: clamp(5rem, 10vh, 9rem) var(--gutter);
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+
+.activate__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.activate__bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+
+.activate__bg-orb--1 {
+  width: 500px;
+  height: 500px;
+  top: -20%;
+  right: -10%;
+  background: radial-gradient(circle, rgba(184,135,46,0.1) 0%, transparent 70%);
+}
+
+.activate__bg-orb--2 {
+  width: 400px;
+  height: 400px;
+  bottom: -15%;
+  left: -5%;
+  background: radial-gradient(circle, rgba(46,204,139,0.07) 0%, transparent 70%);
+}
+
+.activate__bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 80% at 50% 50%, black 0%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 80% at 50% 50%, black 0%, transparent 100%);
+  opacity: 0.3;
+}
+
+.activate__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+
+/* ------------------------------------------------
+   A2. CARD principale
+   ------------------------------------------------ */
+.activate__card {
+  background: rgba(16, 18, 26, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(2rem, 5vw, 3rem);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.03) inset,
+    0 32px 80px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(184,135,46,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Linea oro in cima alla card */
+.activate__card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
+  border-radius: 2px;
+}
+
+.activate__card {
+  position: relative; /* per il ::before */
+}
+
+
+/* ------------------------------------------------
+   A3. ICONA lucchetto animata
+   ------------------------------------------------ */
+.activate__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+}
+
+.activate__icon-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--border-hover);
+  border-radius: 50%;
+  animation: iconRingPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconRingPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50%       { transform: scale(1.25); opacity: 0; }
+}
+
+.activate__lock-svg {
+  color: var(--gold-light);
+  filter: drop-shadow(0 0 8px rgba(212,168,67,0.5));
+}
+
+/* L'arco del lucchetto si apre al successo via classe JS */
+.activate__lock-shackle {
+  transition: d 0.5s ease, transform 0.5s ease;
+  transform-origin: 50% 110%;
+}
+
+.is-unlocked .activate__lock-shackle {
+  transform: rotate(-35deg) translateY(-3px);
+}
+
+.is-unlocked .activate__lock-svg {
+  color: var(--emerald);
+  filter: drop-shadow(0 0 10px rgba(46,204,139,0.6));
+}
+
+
+/* ------------------------------------------------
+   A4. HEADER testuale
+   ------------------------------------------------ */
+.activate__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.activate__eyebrow::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.6;
+}
+
+.activate__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.activate__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.activate__title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.activate__desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 42ch;
+  margin: 0 auto;
+}
+
+.activate__desc strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+
+/* ------------------------------------------------
+   A5. FORM
+   ------------------------------------------------ */
+.activate__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.activate__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.activate__label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.activate__label-hint {
+  font-weight: 300;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+/* Input wrapper con icona */
+.activate__input-wrap {
+  position: relative;
+}
+
+.activate__input-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--duration-fast) ease;
+}
+
+.activate__input {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  outline: none;
+  transition:
+    border-color var(--duration-fast) ease,
+    background   var(--duration-fast) ease,
+    box-shadow   var(--duration-fast) ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.activate__input::placeholder {
+  color: var(--text-muted);
+}
+
+.activate__input:focus {
+  border-color: var(--gold);
+  background: rgba(184,135,46,0.05);
+  box-shadow: 0 0 0 3px rgba(184,135,46,0.12);
+}
+
+.activate__input:focus + .activate__input-icon,
+.activate__input-wrap:focus-within .activate__input-icon {
+  color: var(--gold);
+}
+
+/* Stato valido */
+.activate__input.is-valid {
+  border-color: var(--emerald);
+  background: rgba(46,204,139,0.04);
+}
+
+/* Stato errore */
+.activate__input.is-error {
+  border-color: #e05555;
+  background: rgba(224,85,85,0.04);
+  box-shadow: 0 0 0 3px rgba(224,85,85,0.1);
+  animation: inputShake 0.35s ease;
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(5px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(3px); }
+}
+
+/* Input codice: font monospace + maiuscolo */
+.activate__input--code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding-right: 2.5rem; /* spazio per lo status indicator */
+}
+
+/* Status badge codice (✓ o indicatore formato) */
+.activate__code-status {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.activate__field-error {
+  font-size: 0.75rem;
+  color: #e05555;
+  min-height: 1em;
+  padding-left: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.activate__field-error:not(:empty)::before {
+  content: '!';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background: #e05555;
+  border-radius: 50%;
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.activate__field-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  padding-left: 0.25rem;
+}
+
+
+/* ------------------------------------------------
+   A6. CHECKBOX privacy
+   ------------------------------------------------ */
+.activate__checkbox-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.activate__checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.activate__checkbox-custom {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: rgba(255,255,255,0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  transition:
+    border-color var(--duration-fast) ease;
+  color: transparent;
+}
+
+.activate__checkbox:checked + .activate__checkbox-custom {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg-void);
+}
+
+.activate__checkbox-wrap:hover .activate__checkbox-custom {
+  border-color: var(--border-hover);
+}
+
+.activate__checkbox-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.activate__link {
+  color: var(--gold-light);
+  text-decoration: underline;
+  text-decoration-color: rgba(212,168,67,0.4);
+  transition: text-decoration-color var(--duration-fast) ease;
+}
+
+.activate__link:hover {
+  text-decoration-color: var(--gold-light);
+}
+
+
+/* ------------------------------------------------
+   A7. SUBMIT BUTTON
+   ------------------------------------------------ */
+.activate__submit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.95rem 1.5rem;
+  margin-top: 0.5rem;
+
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  color: var(--bg-void);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 24px rgba(184,135,46,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+
+  transition:
+    transform    var(--duration-fast) ease,
+    box-shadow   var(--duration-fast) ease,
+    opacity      var(--duration-fast) ease;
+}
+
+/* Shimmer sweep su hover */
+.activate__submit::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left var(--duration-slow) ease;
+}
+
+.activate__submit:hover::after { left: 160%; }
+
+.activate__submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(184,135,46,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.activate__submit:active:not(:disabled) { transform: translateY(0); }
+
+.activate__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loader stato loading */
+.activate__submit-loader { display: none; }
+
+.activate__submit.is-loading .activate__submit-text { opacity: 0; }
+.activate__submit.is-loading .activate__submit-icon { display: none; }
+.activate__submit.is-loading .activate__submit-loader {
+  display: flex;
+  position: absolute;
+}
+
+.activate__spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(10,11,14,0.3);
+  border-top-color: var(--bg-void);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ------------------------------------------------
+   A8. GARANZIE
+   ------------------------------------------------ */
+.activate__guarantees {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  list-style: none;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.activate__guarantee {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.activate__guarantee svg { color: var(--emerald); flex-shrink: 0; }
+
+
+/* ------------------------------------------------
+   A9. SCHERMATA SUCCESSO
+   ------------------------------------------------ */
+.activate__success {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 2rem 0;
+  animation: successFadeIn 0.6s var(--ease-out-expo) both;
+}
+
+@keyframes successFadeIn {
+  from { opacity: 0; transform: scale(0.95) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Burst animato */
+.activate__success-burst {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activate__success-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--emerald);
+  opacity: 0;
+  animation: ringExpand 1.2s ease-out forwards;
+}
+
+.activate__success-ring--1 { animation-delay: 0s; }
+.activate__success-ring--2 { animation-delay: 0.2s; }
+.activate__success-ring--3 { animation-delay: 0.4s; }
+
+@keyframes ringExpand {
+  0%   { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.activate__success-check {
+  position: relative;
+  z-index: 1;
+  width: 70px;
+  height: 70px;
+  background: rgba(46,204,139,0.12);
+  border: 1px solid rgba(46,204,139,0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--emerald);
+}
+
+/* Animazione tracciamento del segno di spunta */
+.activate__success-path {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: drawCheck 0.5s ease 0.3s forwards;
+}
+
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+.activate__success-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.activate__success-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 44ch;
+}
+
+.activate__success-subtitle strong { color: var(--text-primary); }
+
+/* Lista contenuti sbloccati */
+.activate__unlocked {
+  width: 100%;
+  text-align: left;
+  background: rgba(16,18,26,0.7);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.activate__unlocked-title {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.activate__unlocked-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.activate__unlocked-item {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 10px;
+  transition: background var(--duration-fast) ease;
+}
+
+.activate__unlocked-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.activate__unlocked-icon {
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activate__unlocked-item strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin-bottom: 0.1rem;
+}
+
+.activate__unlocked-item span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.activate__unlocked-btn {
+  flex-shrink: 0;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition:
+    background     var(--duration-fast) ease,
+    border-color   var(--duration-fast) ease;
+}
+
+.activate__unlocked-btn:hover {
+  background: var(--gold-dim);
+  border-color: var(--border-hover);
+}
+
+.activate__unlocked-active {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: var(--emerald);
+  font-weight: 500;
+}
+
+/* Pulsante reset */
+.activate__reset {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 2px;
+  cursor: pointer;
+  transition: color var(--duration-fast) ease;
+}
+
+.activate__reset:hover { color: var(--text-secondary); }
+
+
+/* ------------------------------------------------
+   A10. RESPONSIVE
+   ------------------------------------------------ */
+@media (max-width: 600px) {
+  .activate__card {
+    padding: 1.75rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .activate__guarantees {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .activate__unlocked-item {
+    grid-template-columns: 30px 1fr;
+  }
+
+  .activate__unlocked-btn,
+  .activate__unlocked-active {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ================================================
+   FASE 4 — SEZIONE LIBRI / COLLANA
+   ================================================ */
+
+/* ------------------------------------------------
+   B1. SEZIONE — Layout e sfondo
+   ------------------------------------------------ */
+.books {
+  position: relative;
+  padding: clamp(5rem, 10vh, 9rem) 0;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+
+.books__bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+
+.books__bg-orb {
+  position: absolute; border-radius: 50%; filter: blur(110px);
+}
+.books__bg-orb--1 {
+  width: 600px; height: 600px; top: -20%; left: -15%;
+  background: radial-gradient(circle, rgba(184,135,46,0.09) 0%, transparent 70%);
+}
+.books__bg-orb--2 {
+  width: 500px; height: 500px; bottom: -10%; right: -10%;
+  background: radial-gradient(circle, rgba(46,204,139,0.06) 0%, transparent 70%);
+}
+.books__bg-line {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent);
+  opacity: 0.3;
+}
+
+.books__inner {
+  position: relative; z-index: 1;
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex; flex-direction: column; gap: 3rem;
+}
+
+
+/* ------------------------------------------------
+   B2. HEADER sezione
+   ------------------------------------------------ */
+.books__header {
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+
+.books__eyebrow {
+  display: flex; align-items: center; gap: 1rem;
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+}
+.books__eyebrow-line {
+  display: block; height: 1px; width: 40px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+.books__eyebrow-line:last-child {
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.books__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700; line-height: 1.1; color: var(--text-primary);
+}
+.books__title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.books__subtitle {
+  font-size: clamp(0.9rem, 1.5vw, 1rem); color: var(--text-secondary);
+  line-height: 1.75; max-width: 52ch;
+}
+
+
+/* ------------------------------------------------
+   B3. CAROUSEL — struttura
+   ------------------------------------------------ */
+.books__carousel-wrap {
+  position: relative;
+  display: flex; align-items: center; gap: 1rem;
+}
+
+.books__track-outer {
+  flex: 1; overflow: hidden; border-radius: 20px;
+}
+
+.books__track {
+  display: flex; gap: 1.5rem;
+  transition: transform 0.55s var(--ease-out-expo);
+  will-change: transform;
+  cursor: grab;
+}
+
+.books__track.is-dragging { cursor: grabbing; transition: none; }
+
+
+/* ------------------------------------------------
+   B4. CARD — struttura comune
+   ------------------------------------------------ */
+.books__card {
+  flex: 0 0 calc(100%);   /* una card per viewport */
+  min-width: 0;
+}
+
+.books__card-inner {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  background: rgba(16, 18, 26, 0.75);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(2rem, 4vw, 3rem);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px); 
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  min-height: 480px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Linea oro in cima solo per Vol. I */
+.books__card--active .books__card-inner::before {
+  content: '';
+  position: absolute; top: -1px; left: 10%; right: 10%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
+  border-radius: 2px;
+}
+
+/* Card coming soon: leggermente più scura */
+.books__card--soon .books__card-inner {
+  background: rgba(12, 14, 20, 0.8);
+}
+
+
+/* ------------------------------------------------
+   B5. BOOK 3D MINI (nelle card)
+   ------------------------------------------------ */
+.books__book-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+  flex-shrink: 0;
+}
+
+.books__book-scene {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  width: 200px; height: 270px;
+  animation: bookFloat 6s ease-in-out infinite;
+}
+
+.books__card--soon .books__book-scene { animation-play-state: paused; }
+
+.books__book-glow {
+  position: absolute; width: 140px; height: 140px;
+  background: radial-gradient(circle, rgba(184,135,46,0.4) 0%, transparent 70%);
+  border-radius: 50%; filter: blur(30px); bottom: 5%; left: 50%; transform: translateX(-50%);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+.books__book-glow--muted {
+  background: radial-gradient(circle, rgba(100,100,120,0.2) 0%, transparent 70%);
+  animation: none;
+}
+
+.books__book {
+  position: relative; width: 140px; height: 200px;
+  transform-style: preserve-3d;
+  transform: perspective(700px) rotateY(-25deg) rotateX(3deg);
+  transition: transform 0.6s var(--ease-out-expo);
+}
+.books__book:hover { transform: perspective(700px) rotateY(-10deg) rotateX(2deg); }
+.books__book--soon { opacity: 0.55; filter: saturate(0.3); }
+.books__book--soon:hover { transform: perspective(700px) rotateY(-25deg) rotateX(3deg); }
+
+.books__book-face { position: absolute; backface-visibility: hidden; }
+
+.books__book-front {
+  width: 140px; height: 200px; top: 0; left: 0;
+  transform: translateZ(14px);
+  border-radius: 2px 5px 5px 2px; overflow: hidden;
+  box-shadow: 6px 10px 30px rgba(0,0,0,0.6);
+}
+.books__book-cover {
+  position: relative; width: 100%; height: 100%;
+  background: linear-gradient(160deg, #0f1420 0%, #080c18 50%, #060810 100%);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 0.85rem 0.75rem;
+  border: 1px solid rgba(184,135,46,0.25); border-right: none; overflow: hidden;
+}
+.books__book-cover::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+.books__book-cover--soon {
+  background: linear-gradient(160deg, #0c0d14 0%, #07080f 100%);
+  border-color: rgba(100,100,120,0.2);
+}
+.books__book-cover--soon::before { background: rgba(100,100,120,0.3); }
+
+.books__book-cover-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+.books__book-series { font-size: 0.38rem; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+.books__book-vol    { font-size: 0.36rem; color: var(--text-muted); letter-spacing: 0.1em; }
+.books__book-cover-icon { display: flex; justify-content: center; align-items: center; flex: 1; position: relative; z-index: 1; color: var(--gold-light); }
+.books__book-cover-bottom { display: flex; flex-direction: column; gap: 0.25rem; position: relative; z-index: 1; }
+.books__book-title-mini  { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; line-height: 1.2; color: var(--text-primary); }
+.books__book-author-mini { font-size: 0.38rem; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+.books__book-shine {
+  position: absolute; top: 0; left: 0; width: 55%; height: 100%;
+  background: linear-gradient(105deg, rgba(255,255,255,0.06) 0%, transparent 60%); pointer-events: none;
+}
+
+.books__book-spine {
+  width: 24px; height: 200px; top: 0; left: -24px;
+  transform: rotateY(-90deg) translateZ(14px);
+  background: linear-gradient(180deg, #1a1208 0%, #0d0a04 100%);
+  border-left: 1px solid rgba(184,135,46,0.15);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.books__book-spine-text {
+  font-size: 0.32rem; font-weight: 400; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--gold);
+  writing-mode: vertical-rl; text-orientation: mixed; white-space: nowrap;
+}
+.books__book-back  { width: 140px; height: 200px; top: 0; left: 0; transform: rotateY(180deg) translateZ(14px); background: #080a10; }
+.books__book-pages {
+  position: absolute; top: 2px; right: -8px; width: 10px; height: 196px;
+  background: repeating-linear-gradient(to bottom, #e8dfc8 0px, #e8dfc8 1px, #c8b88a 1px, #c8b88a 2px);
+  border-radius: 0 2px 2px 0; box-shadow: 2px 0 6px rgba(0,0,0,0.4);
+}
+.books__book-pages--soon {
+  background: repeating-linear-gradient(to bottom, #2a2a35 0px, #2a2a35 1px, #1f1f28 1px, #1f1f28 2px);
+}
+
+/* Coming soon overlay sul libro */
+.books__soon-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.books__soon-label {
+  background: rgba(10,11,14,0.85);
+  border: 1px solid var(--border);
+  border-radius: 6px; padding: 0.3rem 0.65rem;
+  font-size: 0.6rem; font-weight: 500; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-secondary);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Badge "Disponibile ora" sotto il libro Vol. I */
+.books__available-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  background: rgba(46,204,139,0.1); border: 1px solid rgba(46,204,139,0.3); border-radius: 100px;
+  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; color: var(--emerald);
+}
+.books__available-dot {
+  width: 6px; height: 6px; background: var(--emerald); border-radius: 50%; flex-shrink: 0;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+
+/* ------------------------------------------------
+   B6. CONTENUTO TESTUALE CARD
+   ------------------------------------------------ */
+.books__card-content {
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+
+.books__card-meta {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.books__card-vol {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.books__card-tag {
+  padding: 0.2rem 0.6rem; border-radius: 4px;
+  font-size: 0.62rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.books__card-tag--active {
+  background: rgba(46,204,139,0.12); color: var(--emerald);
+  border: 1px solid rgba(46,204,139,0.25);
+}
+.books__card-tag--soon {
+  background: rgba(100,100,120,0.15); color: var(--text-muted);
+  border: 1px solid rgba(100,100,120,0.2);
+}
+
+.books__card-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 700; line-height: 1.1; color: var(--text-primary);
+}
+.books__card-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.books__card-title--muted { color: var(--text-secondary); }
+.books__card-title--muted em {
+  background: linear-gradient(135deg, rgba(212,168,67,0.5), rgba(184,135,46,0.5));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.books__card-desc {
+  font-size: 0.9rem; color: var(--text-secondary); line-height: 1.75; max-width: 50ch;
+}
+
+/* Topics / argomenti chiave */
+.books__topics {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1rem; list-style: none;
+}
+.books__topic {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.78rem; color: var(--text-secondary);
+}
+.books__topic svg { color: var(--emerald); flex-shrink: 0; }
+.books__topics--muted .books__topic { color: var(--text-muted); }
+.books__topics--muted .books__topic svg { display: none; }
+.books__topics--muted .books__topic::before {
+  content: '·'; color: var(--text-muted); font-size: 1rem; flex-shrink: 0;
+}
+
+/* CTAs */
+.books__card-cta {
+  display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.books__cta-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.7rem 1.35rem;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--bg-void); font-size: 0.82rem; font-weight: 500;
+  letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(184,135,46,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+.books__cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(184,135,46,0.5); }
+.books__cta-primary:active { transform: translateY(0); }
+
+.books__cta-secondary {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.7rem 1rem; font-size: 0.78rem; color: var(--text-muted);
+  border: 1px solid var(--border); border-radius: 8px;
+  transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+}
+.books__cta-secondary:hover { color: var(--text-secondary); border-color: var(--border-hover); }
+
+.books__cta-notify {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.7rem 1.35rem;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px;
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em; color: var(--text-secondary);
+  transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+  cursor: pointer;
+}
+.books__cta-notify:hover { background: var(--gold-dim); border-color: var(--border-hover); color: var(--gold-light); }
+.books__cta-notify.is-subscribed { color: var(--emerald); border-color: rgba(46,204,139,0.3); background: rgba(46,204,139,0.06); cursor: default; }
+
+
+/* ------------------------------------------------
+   B7. FRECCE NAVIGAZIONE
+   ------------------------------------------------ */
+.books__arrow {
+  flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  color: var(--text-secondary); cursor: pointer;
+  transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease, transform var(--duration-fast) ease;
+  z-index: 10;
+}
+.books__arrow:hover:not(:disabled) {
+  background: var(--gold-dim); border-color: var(--border-hover); color: var(--gold-light); transform: scale(1.08);
+}
+.books__arrow:disabled { opacity: 0.25; cursor: not-allowed; }
+
+
+/* ------------------------------------------------
+   B8. DOT INDICATORS
+   ------------------------------------------------ */
+.books__dots {
+  display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+}
+.books__dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border); border: none; cursor: pointer; padding: 0;
+  transition: background var(--duration-base) ease, transform var(--duration-base) ease, width var(--duration-base) var(--ease-out-expo);
+}
+.books__dot--active {
+  background: var(--gold); width: 24px; border-radius: 4px;
+}
+.books__dot:hover:not(.books__dot--active) { background: var(--text-muted); transform: scale(1.3); }
+
+
+/* ------------------------------------------------
+   B9. CONTATORE
+   ------------------------------------------------ */
+.books__counter {
+  text-align: center;
+  font-family: var(--font-display); font-size: 0.85rem; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+}
+#booksCurrentNum { color: var(--gold-light); font-weight: 600; font-size: 1.1rem; }
+.books__counter-sep { opacity: 0.3; }
+
+
+/* ------------------------------------------------
+   B10. TOAST notifica
+   ------------------------------------------------ */
+.books__toast {
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
+  z-index: 1000;
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(16,18,26,0.95); border: 1px solid rgba(46,204,139,0.4); border-radius: 10px;
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); color: var(--emerald);
+  font-size: 0.82rem; font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  opacity: 0; transition: opacity 0.3s ease, transform 0.3s var(--ease-out-expo);
+}
+.books__toast[hidden] { display: none; }
+.books__toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+
+/* ------------------------------------------------
+   B11. RESPONSIVE
+   ------------------------------------------------ */
+@media (max-width: 900px) {
+  .books__card-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .books__book-wrap { margin: 0 auto; }
+  .books__card-meta  { justify-content: center; }
+  .books__card-desc  { max-width: 100%; }
+  .books__topics     { justify-content: center; }
+  .books__topic      { justify-content: flex-start; }
+  .books__card-cta   { justify-content: center; }
+  .books__book-scene { width: 160px; height: 230px; }
+  .books__book       { width: 120px; height: 170px; }
+  .books__book-front { width: 120px; height: 170px; }
+  .books__book-spine { height: 170px; }
+  .books__book-back  { width: 120px; height: 170px; }
+  .books__book-pages { height: 166px; }
+}
+
+@media (max-width: 640px) {
+  .books__carousel-wrap { gap: 0.5rem; }
+  .books__arrow { width: 38px; height: 38px; }
+  .books__card-inner { padding: 1.5rem 1.25rem; border-radius: 16px; }
+  .books__topics { grid-template-columns: 1fr; }
+  .books__cta-primary, .books__cta-notify { width: 100%; justify-content: center; }
+  .books__cta-secondary { width: 100%; justify-content: center; }
+}
+/* ================================================
+   FASE 5 — SEZIONE RECENSIONI
+   ================================================ */
+
+/* ------------------------------------------------
+   R1. SEZIONE — layout e sfondo
+   ------------------------------------------------ */
+.reviews {
+  position: relative;
+  padding: clamp(5rem, 10vh, 9rem) 0;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+
+.reviews__bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.reviews__bg-orb { position: absolute; border-radius: 50%; filter: blur(110px); }
+.reviews__bg-orb--1 {
+  width: 550px; height: 550px; bottom: -20%; left: -10%;
+  background: radial-gradient(circle, rgba(184,135,46,0.08) 0%, transparent 70%);
+}
+.reviews__bg-orb--2 {
+  width: 400px; height: 400px; top: -10%; right: -8%;
+  background: radial-gradient(circle, rgba(46,204,139,0.06) 0%, transparent 70%);
+}
+
+.reviews__inner {
+  position: relative; z-index: 1;
+  max-width: 860px; margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex; flex-direction: column; gap: 3rem;
+}
+
+
+/* ------------------------------------------------
+   R2. HEADER e rating aggregato
+   ------------------------------------------------ */
+.reviews__header {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1.5rem; text-align: center;
+}
+
+.reviews__eyebrow {
+  display: flex; align-items: center; gap: 1rem;
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+}
+.reviews__eyebrow-line {
+  display: block; height: 1px; width: 40px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+.reviews__eyebrow-line:last-child {
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.reviews__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  font-weight: 700; line-height: 1.1; color: var(--text-primary);
+}
+.reviews__title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* Rating aggregato */
+.reviews__aggregate {
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: 1.25rem 2rem;
+  background: rgba(16,18,26,0.7); border: 1px solid var(--border); border-radius: 16px;
+   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.reviews__aggregate-score {
+  display: flex; align-items: baseline; gap: 0.2rem;
+  border-right: 1px solid var(--border); padding-right: 1.5rem;
+}
+.reviews__score-num {
+  font-family: var(--font-display); font-size: 3.5rem; font-weight: 700;
+  color: var(--gold-light); line-height: 1;
+}
+.reviews__score-max {
+  font-family: var(--font-display); font-size: 1.2rem;
+  color: var(--text-muted); font-weight: 400;
+}
+
+.reviews__aggregate-right {
+  display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-start;
+}
+
+.reviews__stars { display: flex; gap: 2px; }
+.reviews__star { font-size: 1.15rem; }
+.reviews__star--full { color: var(--gold-light); }
+.reviews__star--half {
+  color: var(--gold-light);
+  /* mezzo stellina via clip */
+  background: linear-gradient(90deg, var(--gold-light) 50%, var(--text-muted) 50%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.reviews__aggregate-label {
+  font-size: 0.78rem; color: var(--text-secondary);
+}
+.reviews__count { color: var(--text-primary); font-weight: 500; }
+
+.reviews__sources { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.reviews__source-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px;
+  font-size: 0.65rem; font-weight: 500; letter-spacing: 0.06em; color: var(--text-muted);
+}
+
+
+/* ------------------------------------------------
+   R3. CAROUSEL
+   ------------------------------------------------ */
+.reviews__carousel-wrap { position: relative; }
+
+.reviews__track-outer { overflow: hidden; border-radius: 16px; }
+
+.reviews__track {
+  display: flex; gap: 1.25rem;
+  transition: transform 0.55s var(--ease-out-expo);
+  will-change: transform;
+  cursor: grab;
+}
+.reviews__track.is-dragging { cursor: grabbing; transition: none; }
+
+
+/* ------------------------------------------------
+   R4. CARD RECENSIONE
+   ------------------------------------------------ */
+.reviews__card {
+  flex: 0 0 100%; min-width: 0;
+  background: rgba(16,18,26,0.8); border: 1px solid var(--border); border-radius: 16px;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px); 
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  display: flex; flex-direction: column; gap: 1.25rem;
+  position: relative; overflow: hidden;
+  transition: border-color var(--duration-base) ease;
+}
+
+/* Sottile linea oro in cima */
+.reviews__card::before {
+  content: ''; position: absolute; top: -1px; left: 20%; right: 20%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,135,46,0.5), transparent);
+}
+
+.reviews__card-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+
+.reviews__quote-mark {
+  font-family: var(--font-display); font-size: 5rem; line-height: 0.7;
+  color: var(--gold); opacity: 0.25; font-weight: 700; -webkit-user-select: none; user-select: none;
+  margin-top: 0.5rem;
+}
+
+.reviews__source-info { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+
+.reviews__card-source {
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid;
+}
+.reviews__card-source--amazon {
+  color: #f0a500; border-color: rgba(240,165,0,0.3); background: rgba(240,165,0,0.08);
+}
+.reviews__card-source--google {
+  color: #4a90e2; border-color: rgba(74,144,226,0.3); background: rgba(74,144,226,0.08);
+}
+
+.reviews__card-stars {
+  font-size: 0.95rem; color: var(--gold-light); letter-spacing: 1px;
+}
+
+.reviews__text {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-style: italic; font-weight: 400;
+  line-height: 1.75; color: var(--text-primary);
+  flex: 1;
+}
+
+.reviews__card-footer {
+  display: flex; align-items: center; gap: 0.85rem;
+  padding-top: 1rem; border-top: 1px solid var(--border);
+}
+
+/* Avatar con iniziali */
+.reviews__avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-body); font-size: 0.72rem; font-weight: 600;
+  color: var(--bg-void); letter-spacing: 0.03em;
+}
+/* Varianti colore avatar */
+.reviews__avatar--2 { background: linear-gradient(135deg, #4a90e2, #7ab4f5); }
+.reviews__avatar--3 { background: linear-gradient(135deg, var(--emerald), #5ee8a8); color: #0a0b0e; }
+.reviews__avatar--4 { background: linear-gradient(135deg, #9b59b6, #c39bd3); }
+.reviews__avatar--5 { background: linear-gradient(135deg, #e67e22, #f0a500); }
+.reviews__avatar--6 { background: linear-gradient(135deg, #e74c3c, #ff7675); }
+
+.reviews__reviewer { display: flex; flex-direction: column; gap: 0.15rem; }
+.reviews__reviewer-name   { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); }
+.reviews__reviewer-detail { font-size: 0.72rem; color: var(--text-muted); }
+
+
+/* ------------------------------------------------
+   R5. CONTROLLI (frecce + dots centrati)
+   ------------------------------------------------ */
+.reviews__controls {
+  display: flex; align-items: center; justify-content: center; gap: 1.25rem;
+}
+
+.reviews__arrow {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  color: var(--text-secondary); cursor: pointer;
+  transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+.reviews__arrow:hover:not(:disabled) {
+  background: var(--gold-dim); border-color: var(--border-hover);
+  color: var(--gold-light); transform: scale(1.08);
+}
+.reviews__arrow:disabled { opacity: 0.2; cursor: not-allowed; }
+
+.reviews__dots { display: flex; align-items: center; gap: 0.5rem; }
+.reviews__dot {
+  width: 7px; height: 7px; border-radius: 50%; padding: 0;
+  background: var(--border); border: none; cursor: pointer;
+  transition: background var(--duration-base) ease, transform var(--duration-base) ease, width var(--duration-base) var(--ease-out-expo);
+}
+.reviews__dot--active { background: var(--gold); width: 22px; border-radius: 4px; }
+.reviews__dot:hover:not(.reviews__dot--active) { background: var(--text-muted); transform: scale(1.3); }
+
+
+/* ------------------------------------------------
+   R6. CTA FINALE
+   ------------------------------------------------ */
+.reviews__cta-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  padding-top: 1rem; text-align: center;
+}
+.reviews__cta-label {
+  font-size: 0.85rem; color: var(--text-muted);
+}
+.reviews__cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.8rem 1.75rem;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--bg-void); font-size: 0.88rem; font-weight: 500;
+  letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(184,135,46,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+.reviews__cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(184,135,46,0.5); }
+.reviews__cta:active { transform: translateY(0); }
+
+
+/* ------------------------------------------------
+   R7. RESPONSIVE
+   ------------------------------------------------ */
+@media (max-width: 640px) {
+  .reviews__aggregate {
+    flex-direction: column; gap: 1rem; text-align: center;
+    padding: 1.25rem 1.25rem;
+  }
+  .reviews__aggregate-score { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+  .reviews__aggregate-right { align-items: center; }
+  .reviews__card { padding: 1.5rem 1.25rem; }
+  .reviews__quote-mark { font-size: 3.5rem; }
+}
+/* ================================================
+   FASE 6 — CHI SIAMO
+   ================================================ */
+
+/* ------------------------------------------------
+   AB1. SEZIONE — layout e sfondo
+   ------------------------------------------------ */
+.about {
+  position: relative;
+  padding: clamp(5rem, 10vh, 9rem) 0;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+
+.about__bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.about__bg-orb { position: absolute; border-radius: 50%; filter: blur(110px); }
+.about__bg-orb--1 {
+  width: 600px; height: 600px; top: -10%; right: -15%;
+  background: radial-gradient(circle, rgba(184,135,46,0.09) 0%, transparent 70%);
+}
+.about__bg-orb--2 {
+  width: 400px; height: 400px; bottom: -10%; left: -5%;
+  background: radial-gradient(circle, rgba(46,204,139,0.06) 0%, transparent 70%);
+}
+.about__bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 90% at 80% 50%, black 0%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 90% at 80% 50%, black 0%, transparent 100%);
+  opacity: 0.2;
+}
+
+.about__inner {
+  position: relative; z-index: 1;
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: clamp(3rem, 7vw, 7rem);
+  align-items: start;
+}
+
+
+/* ------------------------------------------------
+   AB2. COLONNA SINISTRA — avatar + stats + tag
+   ------------------------------------------------ */
+.about__left {
+  display: flex; flex-direction: column; gap: 2.5rem;
+  position: sticky; top: calc(var(--nav-height) + 2rem);
+}
+
+/* Avatar */
+.about__avatar-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+
+.about__avatar {
+  position: relative; width: 140px; height: 140px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.about__avatar-initials {
+  position: relative; z-index: 2;
+  width: 110px; height: 110px; border-radius: 50%;
+  background: linear-gradient(135deg, #1a1208, #0f0c06);
+  border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 2.2rem; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 0.05em;
+  box-shadow: 0 0 30px rgba(184,135,46,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.about__avatar-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1px solid rgba(184,135,46,0.3);
+  animation: aboutRingPulse 4s ease-in-out infinite;
+}
+.about__avatar-ring--2 {
+  inset: -12px; border-color: rgba(184,135,46,0.12);
+  animation-delay: 1s;
+}
+@keyframes aboutRingPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50%       { transform: scale(1.06); opacity: 0.15; }
+}
+
+.about__avatar-badge {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.3rem 0.75rem;
+  background: rgba(46,204,139,0.1); border: 1px solid rgba(46,204,139,0.25); border-radius: 100px;
+  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; color: var(--emerald);
+}
+.about__avatar-badge svg { color: var(--emerald); flex-shrink: 0; }
+
+/* Stats */
+.about__stats {
+  display: flex; flex-direction: column; gap: 0;
+  background: rgba(16,18,26,0.7); border: 1px solid var(--border); border-radius: 14px;
+  overflow: hidden;
+}
+
+.about__stat {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--duration-fast) ease;
+}
+.about__stat:last-child { border-bottom: none; }
+.about__stat:hover { background: rgba(255,255,255,0.02); }
+
+.about__stat-num {
+  font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+  color: var(--gold-light); min-width: 3ch; line-height: 1; flex-shrink: 0;
+}
+.about__stat-label {
+  font-size: 0.72rem; color: var(--text-secondary); line-height: 1.5;
+}
+
+/* Tags */
+.about__tags {
+  display: flex; flex-wrap: wrap; gap: 0.45rem;
+  justify-content: center;
+}
+.about__tag {
+  padding: 0.28rem 0.7rem;
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 100px;
+  font-size: 0.68rem; font-weight: 400; letter-spacing: 0.06em; color: var(--text-secondary);
+  transition: border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+.about__tag:hover { border-color: var(--border-hover); color: var(--gold-light); }
+
+
+/* ------------------------------------------------
+   AB3. COLONNA DESTRA — testo
+   ------------------------------------------------ */
+.about__right {
+  display: flex; flex-direction: column; gap: 2.5rem;
+  padding-top: 0.5rem;
+}
+
+/* Eyebrow + titolo */
+.about__header { display: flex; flex-direction: column; gap: 0.85rem; }
+
+.about__eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold); width: fit-content;
+}
+.about__eyebrow::before {
+  content: ''; display: block; width: 20px; height: 1px;
+  background: var(--gold); opacity: 0.6;
+}
+
+.about__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  font-weight: 700; line-height: 1.08; color: var(--text-primary);
+}
+.about__title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-light), #f0c96a, var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* Corpo del testo */
+.about__body {
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+
+.about__body p {
+  font-size: clamp(0.9rem, 1.4vw, 1rem);
+  color: var(--text-secondary); line-height: 1.85;
+}
+
+.about__lead {
+  font-size: clamp(1rem, 1.6vw, 1.1rem) !important;
+  color: var(--text-primary) !important;
+  font-weight: 400;
+}
+
+.about__body strong { color: var(--text-primary); font-weight: 500; }
+
+/* Callout evidenziato */
+.about__callout {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 1.25rem 1.5rem;
+  background: rgba(184,135,46,0.06); border: 1px solid rgba(184,135,46,0.2);
+  border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0;
+}
+.about__callout svg {
+  color: var(--gold); flex-shrink: 0; margin-top: 0.15rem;
+}
+.about__callout p {
+  font-size: 0.9rem !important;
+  color: var(--text-secondary) !important;
+  line-height: 1.75 !important;
+  margin: 0;
+}
+.about__callout strong { color: var(--gold-light) !important; }
+
+/* Firma */
+.about__signature {
+  display: flex; flex-direction: column; gap: 0.4rem;
+  padding-top: 0.5rem;
+}
+.about__signature-line {
+  width: 50px; height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-bottom: 0.25rem;
+}
+.about__signature-name {
+  font-family: var(--font-display); font-size: 1.3rem; font-weight: 600;
+  color: var(--gold-light); letter-spacing: 0.02em;
+}
+.about__signature-role {
+  font-size: 0.72rem; color: var(--text-muted);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+
+/* ------------------------------------------------
+   AB4. RESPONSIVE
+   ------------------------------------------------ */
+@media (max-width: 960px) {
+  .about__inner {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .about__left {
+    position: static;
+    flex-direction: row; flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+  .about__avatar-wrap { flex: 0 0 auto; }
+  .about__stats { flex: 1; min-width: 220px; }
+  .about__tags  { justify-content: flex-start; }
+}
+
+@media (max-width: 600px) {
+  .about__left { flex-direction: column; align-items: center; }
+  .about__stats { width: 100%; }
+  .about__tags  { justify-content: center; }
+  .about__callout { flex-direction: column; gap: 0.75rem; }
+}
+
+/* ================================================
+   COPERTINA REALE — immagine nei libri 3D
+   ================================================ */
+ 
+/* Hero — libro grande */
+.hero__book-front--img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px 6px 6px 3px;
+  border: none !important;
+  box-shadow: 8px 12px 40px rgba(0,0,0,0.6), 2px 2px 0 rgba(255,255,255,0.04) inset;
+}
+ 
+.hero__book-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+ 
+/* Riflesso lucido sopra l'immagine */
+.hero__book-front--img .hero__book-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, rgba(255,255,255,0.12) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 2;
+}
+ 
+/* Sezione libri — libro piccolo Vol. I */
+.books__book-front--img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px 5px 5px 2px;
+  border: none !important;
+  box-shadow: 6px 10px 30px rgba(0,0,0,0.6);
+}
+ 
+.books__book-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+ 
+.books__book-front--img .books__book-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, rgba(255,255,255,0.1) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+
+
+
+
